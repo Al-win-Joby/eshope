@@ -16,6 +16,8 @@ from twilio.rest import Client
 
 from store.models import Products, RealOffers
 # Create your views here.
+rotp =''
+user={'',}
 def loginn(request):
     if request.user.is_authenticated:
         
@@ -24,9 +26,7 @@ def loginn(request):
     return render(request,'login.html')
 
 def signup(request):
-    return render(request,'signup.html')
-global rotp
-global user 
+    return render(request,'signup.html') 
 def signedup(request):
     if request.method=='POST':
         #print("signedup")
@@ -58,7 +58,7 @@ def signedup(request):
                         referrelG = referrel
 
 
-                global user 
+                #global user 
                 
                 user={'first_name':first_name,'last_name':last_name,'phone_number':phone_number,'username':username,'email':email,'password':password1}
                 #user= Accounts.objects.create_user(first_name=first_name,last_name=last_name,phone_number=phone_number,username=username,email=email,password=password1)
@@ -71,10 +71,10 @@ def signedup(request):
 
 
 def signed_up(request):
-    global rotp
+    #global rotp
     rotp=getotp()
     #print("user created but not saved")
-    global user
+    #global user
     
     return render(request,'otp.html')
 
@@ -127,12 +127,12 @@ def verify(request):
         third=request.POST.get('third')
         fourth=request.POST.get('fourth')
         number=first+second+third+fourth
-        global rotp
+        #global rotp
         
         if(number==str(rotp)):
             #print("correct")
             global referrelG
-            global user
+            #global user
             if user is not None:
                 
                 
