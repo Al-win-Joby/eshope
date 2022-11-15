@@ -1,0 +1,189 @@
+
+{% extends 'userside/homebase.html' %}
+{% load static %}
+{% block content%}
+<!-- ========================= SECTION PAGETOP ========================= -->
+<section class="section-pagetop bg">
+<div class="container">
+	<h2 class="title-page">Our Store</h2>
+	
+</div> <!-- container //  -->
+</section>
+<!-- ========================= SECTION INTRO END// ========================= -->
+
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-content padding-y">
+<div class="container">
+
+<div class="row">
+	<aside class="col-md-3">
+		
+<div class="card">
+	<article class="filter-group">
+		<header class="card-header">
+			<a href="#" data-toggle="collapse" data-target="#collapse_1" aria-expanded="true" class="">
+				<i class="icon-control fa fa-chevron-down"></i>
+				<h6 class="title">Categories</h6>
+			</a>
+		</header>
+		<div class="filter-content collapse show" id="collapse_1" >
+			<div class="card-body">
+				
+				<ul class="list-menu">
+					<li><a href="{% url 'home' %}"> All products </a></li>
+					{%for category in links%}
+				<li><a href="{{category.geturl}}">{{category.category_name}}  </a></li>
+					{% endfor %}
+				</ul>
+
+			</div> <!-- card-body.// -->
+		</div>
+	</article> <!-- filter-group  .// -->
+	{% comment %} <article class="filter-group">
+		<header class="card-header">
+			<a href="#" data-toggle="collapse" data-target="#collapse_4" aria-expanded="true" class="">
+				<i class="icon-control fa fa-chevron-down"></i>
+				<h6 class="title">Sizes </h6>
+			</a>
+		</header>
+
+		</div>
+	</article> {% endcomment %}
+	
+	<article class="filter-group">
+		<header class="card-header">
+			<a href="#" data-toggle="collapse" data-target="#collapse_3" aria-expanded="true" class="">
+				<i class="icon-control fa fa-chevron-down"></i>
+				<h6 class="title">Price range</h6>
+			</a>
+		</header>
+		<div class="filter-content collapse show" id="collapse_3" >
+			<div class="card-body">
+				<form action="applyfilter" method="post">
+					{% csrf_token %}
+				<div class="form-row">
+				<div class="form-group col-md-6">
+				  <label>Min</label>
+				  <!-- <input class="form-control" placeholder="₹0" type="number"> -->
+				  	<select id="minid" class="mr-2 form-control" name="minvalue">
+						<option id="0" value="0" >₹0</option>
+						<option id="50" value="5000">₹5000</option>
+						<option id="100" value="10000">₹10000</option>
+						<option id="150" value="15000">₹15000</option>
+						<option id="200" value="20000">₹20000</option>
+						<option id="500" value="50000">₹50000</option>
+						<option id="1000" value="100000">₹100000</option>
+					</select>
+				</div>
+				<div  class="form-group text-right col-md-6">
+				  <label>Max</label>
+				  <div id="max">
+				  	<select id="maxid" class="mr-2 form-control" name="maxvalue">
+						<option id="50" value="5000">₹5000</option>
+						<option id="100" value="10000">₹10000</option>
+						<option id="150" value="15000">₹15000</option>
+						<option id="200" value="20000">₹20000</option>
+						<option id="500" value="50000">₹50000</option>
+						<option id="1000" value="100000">₹100000</option>
+						<option id="2000" value="200000">₹200000+</option>
+					</select>
+				</div>
+				</div>
+				</div> <!-- form-row.// -->
+				
+				<button class="btn btn-block btn-primary">Apply</button>
+				</form>
+			</div><!-- card-body.// -->
+		</div>
+	</article> <!-- filter-group .// -->
+	
+</div> <!-- card.// -->
+
+	</aside> <!-- col.// -->
+	<main class="col-md-9">
+
+<header class="border-bottom mb-4 pb-3">
+		<div class="form-inline">
+			<span class="mr-md-auto">{{productcount}} Items found </span>
+			
+		</div>
+</header><!-- sect-heading -->
+
+<div class="row">
+	 <!-- col.// -->
+	 {%for product in listofproducts %}
+	<div class="col-md-4">
+		<a href="{{product.geturl}}">
+		<figure class="card card-product-grid">
+			<div class="img-wrap"> 
+				<a href="{{product.geturl}}"><img src="{{ product.images.url }}"></a>
+				
+			</div> <!-- img-wrap.// -->
+			<figcaption class="info-wrap">
+				<div class="fix-height">
+					<a href="{{product.geturl}}" class="title">{{product.product_name}}</a>
+					<div class="price-wrap mt-2">
+						{% if product.sellingprice == 0 or product.sellingprice == product.price %}
+						{% if product.afteroffer  %}
+						
+						{% endif %}
+						<a href="{{product.geturl}}"><span class="price">₹ {{product.price}} </span></a>
+						
+						{% else %}
+						<a href="{{product.geturl}}" ><span class=" price">₹ {{product.sellingprice}} </span></a>
+						<a href= st><span class="price" style="font-size:13px; ">&nbsp;  <s class="text-danger" >₹{{product.price}} </s> </span></a>
+						{% endif %}
+
+					</div> <!-- price-wrap.// -->
+					
+				</div>
+				<a href="{{product.geturl}}" class="btn btn-block btn-primary">View Item </a>	
+			</figcaption>
+		</figure>
+		</a>
+	</div> <!-- col.// -->
+	{%endfor%}
+	<!-- col.// -->
+
+	
+</div> <!-- row end.// -->
+
+
+ <nav class="mt-4" aria-label="Page navigation sample">
+	{% if listofproducts.has_other_pages %}
+		<ul class="pagination">
+			{% if listofproducts.has_previous %}
+			<li class="page-item "><a class="page-link" href="?page={{listofproducts.previous_page_number}}">Previous</a></li>
+			{% else %}
+			<li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+			{% endif %}
+
+			{% for i in listofproducts.paginator.page_range %}
+				{% if listofproducts.number == i %}
+					<li class="page-item active"><a class="page-link" href="">{{i}}</a></li>
+				{% else %}
+				<li class="page-item "><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+				{% endif %}
+			{% endfor %}
+
+			{% if listofproducts.has_next %}
+			<li class="page-item"><a class="page-link" href="?page={{listofproducts.next_page_number}}">Next</a></li>
+			{% else %}
+			<li class="page-item disabled"><a class="page-link" href="">Next</a></li>
+			{% endif %}
+		</ul>
+	{% endif %}
+</nav> 
+
+	</main> <!-- col.// -->
+
+</div>
+
+</div> <!-- container .//  -->
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
+<script>
+	
+</script>
+
+{%endblock%}
