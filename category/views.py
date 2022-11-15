@@ -52,8 +52,8 @@ def addthissubcategory(request):
     newsubcategory=Subcategory()
     newsubcategory.subcategory_name=request.POST.get("subcategoryname")
     subcatname=request.POST.get("subcategoryname")
-    if Category.objects.filter(subcategory_name=subcatname):
-        messages.info(request,"Subcategory exists")
+    if Subcategory.objects.filter(subcategory_name=subcatname).exists():
+        message.info(request,"Subcategory exists")
         return render(request,'addsubcategory.html') 
     category_name=request.POST.get("categoryselected")
     category_selected=Category.objects.get(id=category_name)
