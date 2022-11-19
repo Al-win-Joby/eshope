@@ -16,7 +16,7 @@ from twilio.rest import Client
 
 from store.models import Products, RealOffers
 # Create your views here.
-rotp =''
+rotp = 9999
 user={'',}
 def loginn(request):
     if request.user.is_authenticated:
@@ -58,7 +58,7 @@ def signedup(request):
                         referrelG = referrel
 
 
-                #global user 
+                global user 
                 
                 user={'first_name':first_name,'last_name':last_name,'phone_number':phone_number,'username':username,'email':email,'password':password1}
                 #user= Accounts.objects.create_user(first_name=first_name,last_name=last_name,phone_number=phone_number,username=username,email=email,password=password1)
@@ -71,12 +71,32 @@ def signedup(request):
 
 
 def signed_up(request):
-    #global rotp
-    rotp=getotp()
+    import random
+
+    # prints a random value from the list
+
+    list=range(1000,9999)
+    otp=random.choice(list)
+
+
+    account_sid ='AC0c82fc0f46279be5c92de65a35a2a481'
+    auth_token = '4fbab7b61eadb4ccb132d7e20f84b8fd'
+    client = Client(account_sid, auth_token)
+
+    message = client.messages.create(
+    body = otp,
+    from_ = '+17174936731',
+    to    = '+919072863781'
+    )
+    print("otp poytind")
+    global rotp
+    request.session['otp']=otp
+    rotp= otp #,'xyz':"xyz"}
     #print("user created but not saved")
     #global user
-    
+
     return render(request,'otp.html')
+
 
 def verifynumber(request):
     global rotp
@@ -127,17 +147,19 @@ def verify(request):
         third=request.POST.get('third')
         fourth=request.POST.get('fourth')
         number=first+second+third+fourth
-        #global rotp
-        
-        if(number==str(rotp)):
-            #print("correct")
+        global rotp
+        #global user
+        #wotp = rotp["otp"]
+        wotp =rotp
+        Ootp=9999
+        if 'otp' in request.session:
+            Ootp = request.session['otp']
+
+        if(number==str(Ootp)):
             global referrelG
-            #global user
+            global user
             if user is not None:
-                
-                
-                
-               
+
                 first_name=user["first_name"]
                 last_name=user["last_name"]
                 phone_number=user["phone_number"]
@@ -170,7 +192,7 @@ def verify(request):
                         existingwallet.amount=existingwallet.amount+50
                         existingwallet.save()
 
-                return redirect('home')
+                return redirect('login')
          
         else:
             #print('thettipoi')
@@ -188,14 +210,14 @@ def getotp():
     otp=random.choice(list)
     
 
-    account_sid ='AC55ee27ce60089f5fb5d3dedca4e23b0f'
-    auth_token = '857395341d76263388c6c74511d0e701'
+    account_sid ='AC0c82fc0f46279be5c92de65a35a2a481'
+    auth_token = '4fbab7b61eadb4ccb132d7e20f84b8fd'
     client = Client(account_sid, auth_token)
 
     message = client.messages.create(
     body = otp,
-    from_ = '+13252214515',
-    to    = '+919746701683' 
+    from_ = '+17174936731',
+    to    = '+919072863781' 
     )
     print("otp poytind")
     return otp
@@ -243,7 +265,7 @@ def searchG(request):
     keyword= request.GET['search']
     listofproduct=Products.objects.order_by('-created_date').filter(Q(desciption__icontains=keyword)|Q(product_name=keyword)|Q(subcategory_name__subcategory_name=keyword))
 
-    context={'listofproducts':listofproduct}
+    context={'listofproducts':listofproduct,'guestsearch':True}
     return render(request,'index.html',context)
     
 def statusupdate(request):

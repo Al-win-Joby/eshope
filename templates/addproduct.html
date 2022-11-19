@@ -81,7 +81,7 @@
                 <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
                     <h2 class="text-primary mb-0"><i class="fa fa-user-edit"></i></h2>
                 </a>
-                <a href="#" class="sidebar-toggler flex-shrink-0">
+                <a class="sidebar-toggler flex-shrink-0">
                     <i class="fa fa-bars"></i>
                 </a>
                 <form class="d-none d-md-flex ms-4">
@@ -110,19 +110,19 @@
                         <div class="bg-secondary rounded h-100 p-4">
                             <h6 class="mb-4">Add Product</h6>
                             <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="floatingInput"
+                                <input type="text" class="form-control" id="floatingInput" required
                                     placeholder="" name="productname">
                                 <label for="floatingInput">Product Name</label>
                             </div>
                             <div class="form-floating mb-3 row">
                                 <div class="col-6">
                                 <input type="number" class="form-control" id="floatingInput"
-                                    placeholder="Price" name="productprice">
+                                    placeholder="Price" required name="productprice">
                                 <label for="floatingInput"></label>
                                 </div>
                                 
                                 <div class="col-6">
-                                    <input type="number" class="form-control" id="floatingInput"
+                                    <input type="number" class="form-control" id="floatingInput" required
                                         placeholder="Available Stock" name="stock">
                                     <label for="floatingInput"></label>
                                 </div>
@@ -156,7 +156,7 @@
                             <div id="" class="" data-cropzee="cropzee-input"></div>
                             <div class="mb-3">
                                 <label for="floatingTextarea">Upload Thumbnail Image</label>
-                                <input id="imgFile" class="form-control bg-dark" type="file" name="productimage" >
+                                <input id="imgFile" oninput="viewImage1()" required class="form-control bg-dark" type="file" name="productimage" >
                                 <img src="" id="image1" alt="" class="imggmi" style="height:10px">
                             </div>
                             <div style="display:flex">
@@ -167,7 +167,7 @@
 
                             <div class="mb-3">
                                 <label for="floatingTextarea">Upload Images</label>
-                                <input id="imgFiles" class="form-control bg-dark" type="file" multiple name="productimages" >
+                                <input id="imgFiles" oninput="multi()" class="form-control bg-dark"  type="file" multiple name="productimages" >
                             </div>
                          
                             <button type="submit" class="btn btn-primary">Add</button>
@@ -187,7 +187,7 @@
 
 
         <!-- Back to Top -->
-        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+        <a  class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
 
     <!-- JavaScript Libraries -->
@@ -211,7 +211,7 @@
     <!-- Template Javascript -->
     <script src="{% static 'js/main.js' %}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
   
         const imagebox1 = document.getElementById('screen1')
@@ -219,63 +219,31 @@
         const input1 = document.getElementById('imgFile')
       
       
-        function viewImage1(event) {
+        function viewImage1() {
            
           var fileInput1 = document.getElementById('imgFile');
           var filePath1 = fileInput1.value;
-          var allowedExtensions = /(\.jpg)$/i;
+          var allowedExtensions = /(\.(jpg|png|jpeg))$/i;
           if (!allowedExtensions.exec(filePath1)) {
             fileInput1.value = '';
             swal("There is a problem!", "Please choose image file.");
             return false;
-          } else {
-            document.getElementById('image1').src = URL.createObjectURL(event.target.files[0])
-            
-          }
+          } 
         }
-      
-        input1.addEventListener('change', () => {
-          const img_data1 = input1.files[0]
-          const url1 = URL.createObjectURL(img_data1)
-          imagebox1.innerHTML = `<img src="${url1}" id="img1" style="width:100%;">`
-          const img1 = document.getElementById('img1')
-          document.getElementById('screen1').style.display = 'block'
-      
-          document.getElementById('crop-1').style.display = 'block'
-          document.getElementById('image1').style.display = 'block'
-            
-          crop_btn1.removeAttribute("hidden")
-              console.log("ddddl")
+        function multi(){
 
-          const cropper1 = new Cropper(img1, {
-            autoCropArea: 1,
-            viewMode: 1,
-            scalable: false,
-            zoomable: false,
-            movable: false,
-            minCropBoxWidth: 50,
-            minCropBoxHeight: 50,
-            aspectRatio: 1 / 1,
-          })
-      
-          crop_btn1.addEventListener('click', () => {
-            
-            
-            cropper1.getCroppedCanvas().toBlob((blob) => {
-              let fileInputElement1 = document.getElementById('imgFile');
-              let file1 = new File([blob], img_data1.name, { type: "image/*", lastModified: new Date().getTime() });
-              let container1 = new DataTransfer();
-              container1.items.add(file1);
-              fileInputElement1.files = container1.files;
-              document.getElementById('image1').src = URL.createObjectURL(fileInputElement1.files[0])
-              document.getElementById('screen1').style.display = 'none'
-              document.getElementById('crop-1').style.display = 'none'
-              
-            })
-          })
-      
-        })
-      
+            var selection = document.getElementById('imgFiles');
+            for (var i=0; i<selection.files.length; i++) 
+            {
+                var ext = selection.files[i].name.substr(-3);
+                if(ext!== "png" && ext!== "jpg" && ext!== "jpeg")  
+                {
+                    selection.value=''
+                    swal("There is a problem!", "Please choose image file.");
+                    return false;
+                }
+            } 
+        }
       </script>
     
     

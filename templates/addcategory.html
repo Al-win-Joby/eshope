@@ -78,7 +78,7 @@
                 <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
                     <h2 class="text-primary mb-0"><i class="fa fa-user-edit"></i></h2>
                 </a>
-                <a href="#" class="sidebar-toggler flex-shrink-0">
+                <a  class="sidebar-toggler flex-shrink-0">
                     <i class="fa fa-bars"></i>
                 </a>
                 <form class="d-none d-md-flex ms-4">
@@ -107,7 +107,7 @@
                         <div class="bg-secondary rounded h-100 p-4">
                             <h6 class="mb-4">Add category</h6>
                             <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="floatingInput"
+                                <input type="text" class="form-control" required id="floatingInput"
                                     placeholder="Jeans" name="catname">
                                 <label for="floatingInput">Category Name</label>
                             </div>
@@ -120,7 +120,7 @@
                             <br>
                             <div class="mb-3">
                                 <label for="floatingTextarea">Upload Image</label>
-                                <input class="form-control bg-dark" type="file" name="categoryimage" >
+                                <input id="imgFiles" oninput="multi()" class="form-control bg-dark" type="file" name="categoryimage" >
                             </div>
                             {% for message in messages %}
                             <h3 class="text-center text-danger pt-2">{{message}}</h3>
@@ -148,16 +148,34 @@
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/chart/chart.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/waypoints/waypoints.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-    <script src="lib/tempusdominus/js/moment.min.js"></script>
-    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
-    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="{% static 'assets/admins/lib/chart/chart.min.js' %}"></script>
+    <script src="{% static 'assets/admins/lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'assets/admins/lib/waypoints/waypoints.min.js' %}"></script>
+    <script src="{% static 'assets/admins/lib/owlcarousel/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'assets/admins/lib/tempusdominus/js/moment.min.js' %}"></script>
+    <script src="{% static 'assets/admins/lib/tempusdominus/js/moment-timezone.min.js' %}"></script>
+    <script src="{% static 'assets/admins/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js' %}"></script>
 
     <!-- Template Javascript -->
-    <script src="js/main.js"></script>
+    <script src="{% static 'assets/admins/js/main.js' %}"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script>
+        function multi(){
+
+            var selection = document.getElementById('imgFiles');
+            for (var i=0; i<selection.files.length; i++) 
+            {
+                var ext = selection.files[i].name.substr(-3);
+                if(ext!== "png" && ext!== "jpg" && ext!== "jpeg")  
+                {
+                    selection.value=''
+                    swal("Not an Image", "Please choose an image file.");
+                    return false;
+                }
+            } 
+        }
+    </script>
 </body>
 
 </html>

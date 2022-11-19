@@ -12,7 +12,9 @@ urlpatterns = [
      path('deleteproduct/<int:pk>',views.deleteproduct,name="deleteproduct"),
      path('modifyproduct/<int:pk>',views.modifyproduct,name="modifyproduct"),
      path('home',views.home,name="home"),
+
      path('applyfilter',views.applyfilter,name="applyfilter"),     
+     
      path('checkout',views.checkout,name="checkout"),
      path('cart',views.cart,name="cart"),
      path('salesexcel',views.salesexcel,name="salesexcel"),
@@ -21,19 +23,19 @@ urlpatterns = [
      path('adminoffers',views.adminoffers,name="adminoffers"),
      path('adminoffersReal',views.adminoffersReal,name="adminoffersReal"),
      path('maxvalue/<int:minval>',views.minval,name="minval"),
-
      path('addthiscoupon',views.addthiscoupon,name="addthiscoupon"),
      path('addthisoffer',views.addthisoffer,name="addthisoffer"),
      path('addoffers',views.addoffers,name="addoffers"),
-     path('salesReport',views.salesReport,name="salesReport"),
-     
+     path('salesReport',views.salesReport,name="salesReport"), 
      path('addoffersReal',views.addoffersReal,name="addoffersReal"),
      path('minus/<int:productid>',views.minus,name="minus"),
      path('removefromcart/<int:productid>',views.removefromcart,name="removefromcart"),
      path('addaddress',views.addaddress,name="addaddress"),
      
      path('deleteoffer',views.deleteoffer,name="deleteoffer"),
+     path('deletecoupon',views.deletecoupon,name="deletecoupon"),
      
+
      path('placedorder',views.placedorder,name="placedorder"),
      path('add',views.add,name="add"),
      path('cancelorder',views.cancelorder,name="cancelorder"),
@@ -49,11 +51,10 @@ urlpatterns = [
 
      path('salespdf',views.salespdf,name="salespdf"),
      path('downloadreceipt/<int:pk>',views.downloadreceipt,name="downloadreceipt"),
-
-     path('categories/<slug:category_slug>',views.home,name="filteredhome"),
+     path('categories/<slug:category_slug>/applyfilter',views.applyfilter1,name="filteredhome"),
+     path('categories/<slug:category_slug>',views.home,name="filteredhome"),     
      path('categories/<slug:category_slug>/<slug:product_slug>',views.productshome,name="showproduct"),
      path('categoriess',views.productshome,name="showproducts"),
-       
-     
+            
 ]
   

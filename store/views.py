@@ -185,13 +185,28 @@ def load_subcategory(request):
 def applyfilter(request):
     print("applyfitler")
     minval= request.POST.get('minvalue')
-
-    maxvalue=request.POST.get('maxvalue')
     print(minval)
+    maxvalue=request.POST.get('maxvalue')
     print(maxvalue)
     listofproduct=Products.objects.filter(sellingprice__gte = minval).filter(sellingprice__lte =maxvalue)
     productcount=listofproduct.count
     context={'listofproducts':listofproduct,'productcount':productcount}
+    
+    return render(request,'userside/home.html',context)
+from django.template.loader import render_to_string
+
+def applyfilter1(request,category_slug=None):
+    
+    minval= request.GET.get('minvalue')
+    maxvalue=request.GET.get('maxvalue')
+    print(category_slug)
+    listofproduct=Products.objects.filter(sellingprice__gte = minval).filter(sellingprice__lte =maxvalue).filter(category_name__slug=category_slug)
+    print(listofproduct)
+    productcount=listofproduct.count
+    context={'listofproducts':listofproduct,'productcount':productcount}
+    #html=render_to_string('userside/home.html',context)
+    return JsonResponse(context)
+    return JsonResponse(html,safe=False)
     return render(request,'userside/home.html',context)
 
 
@@ -216,7 +231,6 @@ def home(request,category_slug=None):
         else:
             categories=get_object_or_404(Category,slug=category_slug)
             listofproduct= Products.objects.filter(category_name=categories)
-            print("hereeHy")
             productcount=listofproduct.count
             paginator=Paginator(listofproduct,9)
             page=request.GET.get('page')
@@ -389,11 +403,18 @@ def placedorder(request):
 def deleteoffer(request):
     offerid=request.POST['offerid']
     print("pfferid ",offerid)
-    offer=RealOffers.objects.get(id=offerid)
+    offer=Offers.objects.get(id=offerid)
     offer.delete()
     print("deleted")
     return JsonResponse({'status':True})
 
+def deletecoupon(request):
+    offerid=request.POST['offerid']
+    print("pfferid ",offerid)
+    offer=RealOffers.objects.get(id=offerid)
+    offer.delete()
+    print("deleted")
+    return JsonResponse({'status':True})
 
 def checkout(request):
     print("at checkout")

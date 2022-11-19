@@ -13,7 +13,7 @@
 
 <!-- ========================= SECTION CONTENT ========================= -->
 <section class="section-content padding-y">
-<div class="container">
+<div id="divid" class="container">
 
 <div class="row">
 	<aside class="col-md-3">
@@ -21,7 +21,7 @@
 <div class="card">
 	<article class="filter-group">
 		<header class="card-header">
-			<a href="#" data-toggle="collapse" data-target="#collapse_1" aria-expanded="true" class="">
+			<a  data-toggle="collapse" data-target="#collapse_1" aria-expanded="true" class="">
 				<i class="icon-control fa fa-chevron-down"></i>
 				<h6 class="title">Categories</h6>
 			</a>
@@ -52,7 +52,7 @@
 	
 	<article class="filter-group">
 		<header class="card-header">
-			<a href="#" data-toggle="collapse" data-target="#collapse_3" aria-expanded="true" class="">
+			<a data-toggle="collapse" data-target="#collapse_3" aria-expanded="true" class="">
 				<i class="icon-control fa fa-chevron-down"></i>
 				<h6 class="title">Price range</h6>
 			</a>
@@ -65,34 +65,45 @@
 				<div class="form-group col-md-6">
 				  <label>Min</label>
 				  <!-- <input class="form-control" placeholder="₹0" type="number"> -->
-				  	<select id="minid" class="mr-2 form-control" name="minvalue">
-						<option id="0" value="0" >₹0</option>
+				  	<select id="minid" class="mr-2 form-control" name="minvalue" >
+						<option id="0" selected value="0"> ₹0</option>
 						<option id="50" value="5000">₹5000</option>
 						<option id="100" value="10000">₹10000</option>
 						<option id="150" value="15000">₹15000</option>
 						<option id="200" value="20000">₹20000</option>
-						<option id="500" value="50000">₹50000</option>
-						<option id="1000" value="100000">₹100000</option>
+						<option id="500" value="30000">₹30000</option>
+						<option id="1000" value="40000">₹40000</option>
 					</select>
 				</div>
+
 				<div  class="form-group text-right col-md-6">
 				  <label>Max</label>
 				  <div id="max">
 				  	<select id="maxid" class="mr-2 form-control" name="maxvalue">
-						<option id="50" value="5000">₹5000</option>
-						<option id="100" value="10000">₹10000</option>
-						<option id="150" value="15000">₹15000</option>
-						<option id="200" value="20000">₹20000</option>
-						<option id="500" value="50000">₹50000</option>
-						<option id="1000" value="100000">₹100000</option>
-						<option id="2000" value="200000">₹200000+</option>
+						<option id="50" selected value="50000">₹50000</option>
+						<option id="100" value="75000">₹75000</option>
+						<option id="150" value="100000">₹100000</option>
+						<option id="200" value="150000">₹150000</option>
+						<option id="500" value="200000">₹200000</option>
+						
 					</select>
 				</div>
 				</div>
 				</div> <!-- form-row.// -->
 				
-				<button class="btn btn-block btn-primary">Apply</button>
+				{%if request.get_full_path == '/store/home' %}
+				
+				<button type="submit" class="btn btn-block btn-primary">Apply</button>
 				</form>
+				
+				{% else %}
+				
+
+				<!-- <form action='{{request.get_full_path}}/applyfilter'></form> -->
+				<a onclick="thiss()" class="btn btn-block btn-primary text-white">Applyy</a>
+				
+				{%endif%}
+				
 			</div><!-- card-body.// -->
 		</div>
 	</article> <!-- filter-group .// -->
@@ -110,7 +121,8 @@
 </header><!-- sect-heading -->
 
 <div class="row">
-	 <!-- col.// -->
+	 <!-- col.// --> 
+	 
 	 {%for product in listofproducts %}
 	<div class="col-md-4">
 		<a href="{{product.geturl}}">
@@ -183,7 +195,32 @@
 </section>
 <!-- ========================= SECTION CONTENT END// ========================= -->
 <script>
-	
+	function thiss(){
+		console.log("thiss")
+		var x = "{{request.get_full_path}}"+"/applyfilter"
+		
+		min=document.getElementById('minid').value
+		max=document.getElementById('maxid').value
+		console.log(max)
+		$.ajax({
+			type:"GET",
+			url: x,
+			data:{
+
+				'minvalue':min,				
+				'maxvalue':max,
+
+			},
+			
+			dataType: 'html',
+			success:function(response){
+				$(".divid").html(response);
+				console.log("gidd")
+			}
+		});
+			
+	}
 </script>
+
 
 {%endblock%}

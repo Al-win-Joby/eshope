@@ -101,7 +101,7 @@
 		<div class="card-body">
 			<p class="text-center text-muted">You'll be redirected to Razorpay to add your billing information.</p>
 			<p class="text-center">
-				<a href="#"><img src="{% static 'assets/images/misc/razorpay.png' %}" height="32"></a>
+				<a ><img src="{% static 'assets/images/misc/razorpay.png' %}" height="32"></a>
 				<br><br>
 			</p>
 		</div> <!-- card body .// -->
@@ -125,7 +125,7 @@
 		<div class="card-body">
 			<p class="text-center text-muted">Connect your PayPal account and use it to pay your bills. You'll be redirected to PayPal to add your billing information.</p>
 			<p class="text-center">
-				<a href="#"><img src="{% static 'assets/images/misc/btn-paypal.png' %}" height="32"></a>
+				<a ><img src="{% static 'assets/images/misc/btn-paypal.png' %}" height="32"></a>
 				<br><br>
 			</p>
 		</div> <!-- card body .// -->
@@ -340,15 +340,18 @@
 				if (response.status){
 					var totofferprice=parseInt(response.totoffer_price)
 					console.log(totofferprice)
-					swal('Congratulations!', 'You have earned a profit of '+totofferprice +' Rs','success');
 					document.getElementById('offers').innerHTML="₹ "+totofferprice
 					var finalvalue= parseInt(document.getElementById('xyz').value)
 					finalvalue=finalvalue-totofferprice
 					console.log(finalvalue)
 					document.getElementById('finalamount').innerHTML=finalvalue
 					console.log("here")
-					document.getElementById('xyz').value=finalamount
-					//window.location.reload()
+					document.getElementById('xyz').value=finalamount 
+					swal('Congratulations!', 'You have earned a profit of '+totofferprice +' Rs','success').then(function(){
+						window.location.reload()
+					});
+
+					
 				}
 				else{
 					console.log("thettipoi")
