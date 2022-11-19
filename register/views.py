@@ -80,7 +80,7 @@ def signed_up(request):
 
 
     account_sid ='AC0c82fc0f46279be5c92de65a35a2a481'
-    auth_token = '4fbab7b61eadb4ccb132d7e20f84b8fd'
+    auth_token = '1675921878c1b5c5b7fcd95285c5ea2c'
     client = Client(account_sid, auth_token)
 
     message = client.messages.create(
@@ -211,7 +211,7 @@ def getotp():
     
 
     account_sid ='AC0c82fc0f46279be5c92de65a35a2a481'
-    auth_token = '4fbab7b61eadb4ccb132d7e20f84b8fd'
+    auth_token = '1675921878c1b5c5b7fcd95285c5ea2c'
     client = Client(account_sid, auth_token)
 
     message = client.messages.create(
