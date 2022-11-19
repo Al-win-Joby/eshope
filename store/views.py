@@ -274,7 +274,7 @@ def search(request):
     if 'keyword' in request.GET:
         keyword=request.GET['keyword']
         if keyword:
-            products=Products.objects.order_by('-created_date').filter(Q(desciption__icontains=keyword)|Q(product_name=keyword)|Q(subcategory_name__subcategory_name=keyword))
+            products=Products.objects.order_by('-created_date').filter(Q(desciption__icontains=keyword)|Q(product_name__icontains=keyword)|Q(subcategory_name__subcategory_name__icontains=keyword))
     print(products)
     context={'listofproducts':products}
     return render (request,'userside/home.html',context)
