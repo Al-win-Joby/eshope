@@ -239,8 +239,8 @@ def loggedin(request):
             if user.is_staff==True:
                 login(request,user)
                 
-                if 'productid' in request.session:
-                    prod=Products.objects.get(id=int(request.session['productid']))
+                if 'productid' in request.COOKIES:
+                    prod=Products.objects.get(id=int(request.COOKIES['productid']))
                     
                     
                     return pp.productshome(request,prod.category_name.slug,prod.slug)

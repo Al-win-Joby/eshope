@@ -34,7 +34,6 @@ urlpatterns = [
      
      path('deleteoffer',views.deleteoffer,name="deleteoffer"),
      path('deletecoupon',views.deletecoupon,name="deletecoupon"),
-     
 
      path('placedorder',views.placedorder,name="placedorder"),
      path('add',views.add,name="add"),

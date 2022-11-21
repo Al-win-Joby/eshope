@@ -16,12 +16,11 @@ urlpatterns = [
     path('statusupdate',views.statusupdate,name="statusupdate"),
     path('verifynumber',views.verifynumber,name="verifynumber"),
     path('store/home',views.home,name="home"),
-    path('adminn',views.adminlogin,name="adminlogin"),
+    path('superuser',views.adminlogin,name="adminlogin"),
     path('adminloggedin',views.adminloggedin,name="adminloggedin"),
     path("createadminuser",views.createadminuser,name="createadminuser"),
     path('addadminuser',views.addadminuser,name="addadminuser"),
-    path('adminhome',views.adminhome,name="adminhome"),
-    
+    path('adminhome',views.adminhome,name="adminhome"),    
     path('orderdetails',views.orderdetails,name="orderdetails"),
     
     path('edit/<int:pk>',views.edit1,name='edit'),

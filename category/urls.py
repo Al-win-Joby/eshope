@@ -9,6 +9,8 @@ urlpatterns = [
      path('addthissubcategory',views.addthissubcategory,name="addthissubcategory"),
      path('addsubcategory',views.addsubcategory,name="addsubcategory"),
      path('deletecategory/<int:pk>',views.deletecategory,name="deletecategory"),
+     path('deletesubcategory/<int:pk>',views.deletesubcategory,name="deletesubcategory"),
+     
      path('modifycategory/<int:pk>',views.modifycategory,name="modifycategory"),
      path('modifythiscategory/<int:pk>',views.modifythiscategory,name="modifythiscategory"),
      path('subcategories',views.subcategories,name="subcategories")

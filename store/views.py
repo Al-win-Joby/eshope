@@ -199,15 +199,17 @@ def applyfilter1(request,category_slug=None):
     
     minval= request.GET.get('minvalue')
     maxvalue=request.GET.get('maxvalue')
-    print(category_slug)
-    listofproduct=Products.objects.filter(sellingprice__gte = minval).filter(sellingprice__lte =maxvalue).filter(category_name__slug=category_slug)
+    print("gadasf",maxvalue)
+    listofproduct=Products.objects.filter(sellingprice__gte = minval).filter(sellingprice__lte = maxvalue).filter(category_name__slug = category_slug)
+    #listofproduct=Products.objects.all()#filter(sellingprice__gte = minval).filter(sellingprice__lte = maxvalue).filter(category_name__slug = category_slug)
+    
     print(listofproduct)
     productcount=listofproduct.count
     context={'listofproducts':listofproduct,'productcount':productcount}
-    #html=render_to_string('userside/home.html',context)
-    return JsonResponse(context)
-    return JsonResponse(html,safe=False)
-    return render(request,'userside/home.html',context)
+    #html=render_to_string('userside/home.html',context,request)
+    #return JsonResponse(context)
+    #return JsonResponse({'html': html},safe=False)
+    return render(request,'userside/home1.html',context)
 
 
 @login_required(login_url='login')
@@ -299,10 +301,14 @@ def productshome(request,category_slug,product_slug):
 
 def addcart(request,pid):
     
-    if request.user.is_authenticated == False:        
-        request.session['productid']=pid
-        #print(pid)
-        return redirect('login')      
+    if request.user.is_authenticated == False:
+        resp = redirect("login")
+        resp.set_cookie('productid',pid)      
+        return resp
+
+        #request.session['productid']=pid
+        
+        #return redirect('login')      
    
     
     name= request.user.username
@@ -508,6 +514,11 @@ def add1(request):
     fetchcart=Cart.objects.get(product_id=productid,username_id=userx)
 
     totalquantity=request.POST['totquantity']
+    pro=Products.objects.get(id=productid)
+    if pro.stock<int(totalquantity):
+        
+        return JsonResponse({'status':False})
+
     print(totalquantity)
     fetchcart.totalquantity=totalquantity
 

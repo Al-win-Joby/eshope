@@ -139,9 +139,9 @@
                                     
                                     </form>
                                     
-                                    <form action="{% url 'deleteproduct' pk=i.id %}"  method="post">
+                                    <form id="delete{{forloop.counter}}" action="{% url 'deleteproduct' pk=i.id %}"  method="post">
                                     {% csrf_token %}
-                                    <td><button class="btn btn-sm btn-primary" onclick=checker()>Delete</button></td>
+                                    <td><button class="btn btn-sm btn-primary" onclick="checker('delete{{forloop.counter}}')">Delete</button></td>
                                     </form>
                                 </tr>
                                 {% endfor %}
@@ -198,14 +198,34 @@
 
     <!-- Template Javascript -->
     <script src="{% static 'assets/admins/js/main.js' %}"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
-        function checker(){
-            result= confirm("Are you sure you want to delete");
-            if(result==false)
-            {
-                event.preventDefault();
-            }
+        function checker(x){
+            
+            Swal.fire({
+                title: 'Do you want to delete this product?',
+                showDenyButton: false,
+                showCancelButton: true,
+                confirmButtonText: 'Delete',
+                
+              }).then((result) => 
+              {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isDenied){
+                    event.preventDefault();
+                    console.log("delete aakila")
+                }
+                else if (result.isConfirmed){
+                    console.log("delete aaki")
+                    let form= document.getElementById(x)
+                    form.submit();
+                }
+
+               })
+            event.preventDefault();
         }
+        
         function Readmore(smallid,largeid){
             console.log(largeid)
             document.getElementById(smallid).setAttribute("hidden",true);

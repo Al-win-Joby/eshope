@@ -1,0 +1,76 @@
+
+
+    <header class="border-bottom mb-4 pb-3">
+            <div class="form-inline">
+                <span class="mr-md-auto">{{productcount}} Items found </span>
+                
+            </div>
+    </header><!-- sect-heading -->
+    
+    <div class="row">
+         <!-- col.// --> 
+         
+         {%for product in listofproducts %}
+        <div class="col-md-4">
+            <a href="{{product.geturl}}">
+            <figure class="card card-product-grid">
+                <div class="img-wrap"> 
+                    <a href="{{product.geturl}}"><img src="{{ product.images.url }}"></a>
+                    
+                </div> <!-- img-wrap.// -->
+                <figcaption class="info-wrap">
+                    <div class="fix-height">
+                        <a href="{{product.geturl}}" class="title">{{product.product_name}}</a>
+                        <div class="price-wrap mt-2">
+                            {% if product.sellingprice == 0 or product.sellingprice == product.price %}
+                            {% if product.afteroffer  %}
+                            
+                            {% endif %}
+                            <a href="{{product.geturl}}"><span class="price">₹ {{product.price}} </span></a>
+                            
+                            {% else %}
+                            <a href="{{product.geturl}}" ><span class=" price">₹ {{product.sellingprice}} </span></a>
+                            <a href= st><span class="price" style="font-size:13px; ">&nbsp;  <s class="text-danger" >₹{{product.price}} </s> </span></a>
+                            {% endif %}
+    
+                        </div> <!-- price-wrap.// -->
+                        
+                    </div>
+                    <a href="{{product.geturl}}" class="btn btn-block btn-primary">View Item </a>	
+                </figcaption>
+            </figure>
+            </a>
+        </div> <!-- col.// -->
+        {%endfor%}
+        <!-- col.// -->
+    
+        
+    </div> <!-- row end.// -->
+    
+    
+     <nav class="mt-4" aria-label="Page navigation sample">
+        {% if listofproducts.has_other_pages %}
+            <ul class="pagination">
+                {% if listofproducts.has_previous %}
+                <li class="page-item "><a class="page-link" href="?page={{listofproducts.previous_page_number}}">Previous</a></li>
+                {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                {% endif %}
+    
+                {% for i in listofproducts.paginator.page_range %}
+                    {% if listofproducts.number == i %}
+                        <li class="page-item active"><a class="page-link" href="">{{i}}</a></li>
+                    {% else %}
+                    <li class="page-item "><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+                    {% endif %}
+                {% endfor %}
+    
+                {% if listofproducts.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{listofproducts.next_page_number}}">Next</a></li>
+                {% else %}
+                <li class="page-item disabled"><a class="page-link" href="">Next</a></li>
+                {% endif %}
+            </ul>
+        {% endif %}
+    </nav> 
+    

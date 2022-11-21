@@ -111,7 +111,7 @@
 </div> <!-- card.// -->
 
 	</aside> <!-- col.// -->
-	<main class="col-md-9">
+	<main id="main" class="col-md-9">
 
 <header class="border-bottom mb-4 pb-3">
 		<div class="form-inline">
@@ -197,28 +197,15 @@
 <script>
 	function thiss(){
 		console.log("thiss")
-		var x = "{{request.get_full_path}}"+"/applyfilter"
+		
 		
 		min=document.getElementById('minid').value
 		max=document.getElementById('maxid').value
+		
+		var x = "{{request.get_full_path}}"+"/applyfilter?minvalue="+min+'&maxvalue='+max;
 		console.log(max)
-		$.ajax({
-			type:"GET",
-			url: x,
-			data:{
-
-				'minvalue':min,				
-				'maxvalue':max,
-
-			},
-			
-			dataType: 'html',
-			success:function(response){
-				$(".divid").html(response);
-				console.log("gidd")
-			}
-		});
-			
+		$('#main').load(x)
+			 
 	}
 </script>
 

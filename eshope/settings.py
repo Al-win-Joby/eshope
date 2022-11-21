@@ -25,9 +25,9 @@ SECRET_KEY = 'django-insecure-_4my+nxdq91mb*6v97h*^#addm(i9*vi6z@vjkee*hk^-2cf#&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.gadkart.tk','13.231.75.47','localhost']
+ALLOWED_HOSTS = ["*"]
 
-CSRF_TRUSTED_ORIGINS = ['https://gadkart.tk']
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -85,14 +85,13 @@ AUTH_USER_MODEL='account.Accounts'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'eshope',
-        'USER':  'alwin',
-        'PASSWORD':'123',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'dbaccounts6',
+        'USER':  'postgres',
+        'PASSWORD':'mibyjoby',
         'HOST': 'localhost'
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators

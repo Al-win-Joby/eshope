@@ -25,6 +25,6 @@ urlpatterns = [
     path('category/', include('category.urls')),
     path('store/', include('store.urls')),
     path('payment/',include('razorpay1.urls')),
-    path('admin/', admin.site.urls),
+    #path('admin/', admin.site.urls),
     
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

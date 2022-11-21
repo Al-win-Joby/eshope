@@ -75,6 +75,11 @@ def deletecategory(request,pk):
     get_data.delete()
     return redirect('categories')
 
+def deletesubcategory(request,pk):
+    get_data=Subcategory.objects.get(id=pk)
+    get_data.delete()
+    return redirect('subcategories')
+
 @login_required(login_url='login')
 
 def modifycategory(request,pk):

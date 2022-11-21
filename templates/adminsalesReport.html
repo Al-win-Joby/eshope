@@ -137,7 +137,7 @@
                             <input type="radio" name="dd" value="pdf" id="pdfs">
                             <label for="excels">Excel</label>
                             <input type="radio" name="dd" value="excel" id="excels">
-                            <button class="btn btn-outline-primary" type="submit"><span class="material-symbols-outlined">
+                            <button class="btn btn-outline-primary" onclick="checkdates()" type="submit"><span class="material-symbols-outlined">
                                 file_download
                                 </span></button>
                         <!-- <a type="submit" href="{% url 'salespdf' %}"><i class="bi bi-filetype-pdf"></i> PDF</a> -->
@@ -212,6 +212,8 @@
 
     <!-- Template Javascript -->
     <script src="{% static 'assets/admins/js/main.js' %}"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <script>
         function checker(){
             result= confirm("Are you sure you want to delete");
@@ -219,6 +221,26 @@
             {
                 event.preventDefault();
             }
+        }
+
+        function checkdates(){
+            console.log("kdi")
+            x=document.getElementById('startdate').value
+            y=document.getElementById('enddate').value
+
+            
+            if(x=='' || y==''){
+                Swal.fire({
+                    title: 'Please select a price range',
+                    showDenyButton: false,
+                    showCancelButton: false,
+                    confirmButtonText: 'Ok',
+                    
+                  })
+                event.preventDefault()
+            }
+       
+            
         }
     </script>
 </body>
