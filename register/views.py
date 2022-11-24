@@ -90,7 +90,7 @@ def signed_up(request):
 
 
     account_sid ='AC0c82fc0f46279be5c92de65a35a2a481'
-    auth_token = 'd155bf45816e512f965a675281aac4be'
+    auth_token = '21816cd3c2fb16d9fb0af0800b9bbc1c'
     client = Client(account_sid, auth_token)
 
     message = client.messages.create(
@@ -125,7 +125,7 @@ def verifynumber(request):
             otp=random.choice(list)
 
             account_sid ='AC0c82fc0f46279be5c92de65a35a2a481'  
-            auth_token = 'd155bf45816e512f965a675281aac4be'
+            auth_token = '21816cd3c2fb16d9fb0af0800b9bbc1c'
             client = Client(account_sid, auth_token)
 
             message = client.messages.create(
@@ -199,52 +199,52 @@ def verify(request):
 
         if(number==str(Ootp)):
             global referrelG
-            global user
-            if user is not None:
+           
+            
 
-                if 'first_name' in request.COOKIES:
-                    userformed=tempAccount.objects.get(first_name= request.COOKIES['first_name'])
-                else:
-                    messages.info(request,"Please try again")
-                    return redirect('signup') 
+            if 'first_name' in request.COOKIES:
+                userformed=tempAccount.objects.get(first_name= request.COOKIES['first_name'])
+            else:
+                messages.info(request,"Please try again")
+                return redirect('signup') 
 
-                first_name=userformed.first_name
-                last_name=userformed.last_name
-                phone_number=userformed.phone_number
-                username=userformed.first_name
-                email=userformed.email
-                password1=userformed.password
-                user= Accounts.objects.create_user(first_name=first_name,last_name=last_name,phone_number=phone_number,username=username,email=email,password=password1)
-                userformed.delete()
+            first_name=userformed.first_name
+            last_name=userformed.last_name
+            phone_number=userformed.phone_number
+            username=userformed.first_name
+            email=userformed.email
+            password1=userformed.password
+            user= Accounts.objects.create_user(first_name=first_name,last_name=last_name,phone_number=phone_number,username=username,email=email,password=password1)
+            userformed.delete()
 
-                wallet=Wallet()
-                wallet.user=user
-                wallet.save()
+            wallet=Wallet()
+            wallet.user=user
+            wallet.save()
 
-                referrel=Referrel()
-                referrel.user=user 
-                x=str(phone_number)
-                x=x[-4:]
-                
-                code = first_name+x
-                referrel.code=code
-                
-                referrel.save()
-
-
-                if referrelG != "":
-                    if Referrel.objects.filter(code=referrelG).exists():
-                        referlobj=Referrel.objects.get(code=referrelG)
-                        walletuser=referlobj.user
-                        #if Wallet.objects.filter(user=walletuser).exists():
-                        existingwallet=Wallet.objects.get(user=walletuser)
-                        existingwallet.amount=existingwallet.amount+50
-                        existingwallet.save()
+            referrel=Referrel()
+            referrel.user=user 
+            x=str(phone_number)
+            x=x[-4:]
+            
+            code = first_name+x
+            referrel.code=code
+            
+            referrel.save()
 
 
-                resp= redirect('login')
-                resp.delete_cookie('phone')
-                return resp
+            if referrelG != "":
+                if Referrel.objects.filter(code=referrelG).exists():
+                    referlobj=Referrel.objects.get(code=referrelG)
+                    walletuser=referlobj.user
+                    #if Wallet.objects.filter(user=walletuser).exists():
+                    existingwallet=Wallet.objects.get(user=walletuser)
+                    existingwallet.amount=existingwallet.amount+50
+                    existingwallet.save()
+
+
+            resp= redirect('login')
+            resp.delete_cookie('phone')
+            return resp
         else:
             #print('thettipoi')
             messages.info(request,"Incorrect OTP")
@@ -262,7 +262,7 @@ def getotp():
     
 
     account_sid ='AC0c82fc0f46279be5c92de65a35a2a481'
-    auth_token = 'd155bf45816e512f965a675281aac4be'
+    auth_token = '21816cd3c2fb16d9fb0af0800b9bbc1c'
     client = Client(account_sid, auth_token)
 
     message = client.messages.create(
