@@ -6,7 +6,7 @@ from django.shortcuts import render,redirect
 from django.contrib.auth import login,logout,authenticate
 from django.contrib import messages
 from django.http import JsonResponse
-from account.models import Accounts, Orders ,Referrel ,Wallet
+from account.models import Accounts, Orders ,Referrel ,Wallet ,tempAccount
 from django.urls import reverse
 import os
 from store import views as pp
@@ -17,16 +17,16 @@ from twilio.rest import Client
 from store.models import Products, RealOffers
 # Create your views here.
 rotp = 9999
-user={'',}
+
 def loginn(request):
     if request.user.is_authenticated:
         
       if request.user.is_admin==False:
          return redirect('store/home')
-    return render(request,'login.html')
+    return render(request,'loginReal.html')
 
 def signup(request):
-    return render(request,'signup.html') 
+    return render(request,'signupReal.html')  
 def signedup(request):
     if request.method=='POST':
         #print("signedup")
@@ -40,16 +40,21 @@ def signedup(request):
         phone_number=request.POST.get('phone_number')
         if email=="" or first_name=="" or last_name=="" or username=="" or password1=="" or password2=="" or phone_number=="":
             messages.info(request,"Require all fields")
-            return render(request,'signup.html')
+            return redirect('signup')
+           
         if password1==password2: 
             if Accounts.objects.filter(username=username).exists():
                 messages.info(request,"User exist")
+                return redirect('signup')
                 
-                return render(request,'signup.html')
+                
             elif Accounts.objects.filter(email=email).exists():
                 messages.info(request,"Email exist")
-                
-                return render(request,'signup.html')
+                return redirect('signup')
+            elif Accounts.objects.filter(phone_number=phone_number).exists():
+                messages.info(request,"Phone number exist")
+                return redirect('signup') 
+                                
             else:
                 global referrelG 
                 referrelG=""
@@ -57,14 +62,19 @@ def signedup(request):
                     if Referrel.objects.filter(code=referrel).exists():
                         referrelG = referrel
 
-
                 global user 
-                
+                newuser= tempAccount()
+                newuser.first_name=first_name
+                newuser.last_name=last_name
+                newuser.email = email
+                newuser.phone_number= phone_number
+                newuser.password = password1
+                newuser.save()
                 user={'first_name':first_name,'last_name':last_name,'phone_number':phone_number,'username':username,'email':email,'password':password1}
                 #user= Accounts.objects.create_user(first_name=first_name,last_name=last_name,phone_number=phone_number,username=username,email=email,password=password1)
-                
-                
-                return redirect('signed_up')
+                resp= redirect('signed_up')
+                resp.set_cookie('first_name',first_name)
+                return resp
 
         else:
              return render(request,'signup.html')
@@ -80,7 +90,7 @@ def signed_up(request):
 
 
     account_sid ='AC0c82fc0f46279be5c92de65a35a2a481'
-    auth_token = '1675921878c1b5c5b7fcd95285c5ea2c'
+    auth_token = 'd155bf45816e512f965a675281aac4be'
     client = Client(account_sid, auth_token)
 
     message = client.messages.create(
@@ -88,32 +98,59 @@ def signed_up(request):
     from_ = '+17174936731',
     to    = '+919072863781'
     )
-    print("otp poytind")
-    global rotp
-    request.session['otp']=otp
-    rotp= otp #,'xyz':"xyz"}
-    #print("user created but not saved")
-    #global user
 
+    global rotp
+    request.session['otp']=otp 
+    rotp= otp #,'xyz':"xyz"}   
     return render(request,'otp.html')
 
 
 def verifynumber(request):
-    global rotp
-    global user
-    phone_number=request.POST.get('phone_number')
+
+    if 'phone' in request.COOKIES:
+        phone_number = request.COOKIES['phone']
+    else:    
+        phone_number=request.POST.get('phone_number')
     #print(phone_number+"dddddddddd")
     if Accounts.objects.filter(phone_number=phone_number).exists():
         user=Accounts.objects.get(phone_number=phone_number)
+        resp=redirect('otplogin')
+        resp.set_cookie('phone',phone_number)
         print(user.username)
         if user is not None:
+            import random
+            # prints a random value from the list
+
+            list=range(1000,9999)
+            otp=random.choice(list)
+
+            account_sid ='AC0c82fc0f46279be5c92de65a35a2a481'  
+            auth_token = 'd155bf45816e512f965a675281aac4be'
+            client = Client(account_sid, auth_token)
+
+            message = client.messages.create(
+            body = otp,
+            from_ = '+17174936731',
+            to    = '+919072863781'
+            )
+            print(otp )
+            global rotp
+            request.session['otp']=otp
             
-            rotp=getotp()
+            return resp
     else:
         messages.info(request,"Invalid number")
-        return render(request,'forgotpassword.html')
+        return redirect('forgotpassword')
     
-    return render(request,'otplogin.html')
+    return render(request,'otplogin.html',{'phone':phone_number})
+
+def otplogin(request):
+    if 'phone' in request.COOKIES:
+        phone_number = request.COOKIES['phone']
+        return render(request,'otplogin.html',{'phone':phone_number})
+    else:
+        messages.info(request,"Please try again")
+        return redirect('forgotpassword')
 
 def verifylogin(request):
     if request.method=='POST':
@@ -123,15 +160,20 @@ def verifylogin(request):
         fourth=request.POST.get('fourth')
         number=first+second+third+fourth
         global rotp
-        
-        if(number==str(rotp)):
-            #print("correct")
-            global user
+        if 'phone' in request.COOKIES:
+            x=request.COOKIES['phone']
+            print('cccccccccccccccccccc')
+            print(type(x))
+            print(x)
+            user =Accounts.objects.get(phone_number=x)
+        if 'otp' in request.session:
+            Ootp = request.session['otp']
+        if(number==str(Ootp)):
+            #print("correct")          
             if user is not None:
                
                 login(request,user)
-                return redirect('home')
-            
+                return redirect('home')            
             else:
                 messages.info(request,"Invalid number")
        
@@ -160,20 +202,27 @@ def verify(request):
             global user
             if user is not None:
 
-                first_name=user["first_name"]
-                last_name=user["last_name"]
-                phone_number=user["phone_number"]
-                username=user["username"]
-                email=user["email"]
-                password1=user["password"]
+                if 'first_name' in request.COOKIES:
+                    userformed=tempAccount.objects.get(first_name= request.COOKIES['first_name'])
+                else:
+                    messages.info(request,"Please try again")
+                    return redirect('signup') 
+
+                first_name=userformed.first_name
+                last_name=userformed.last_name
+                phone_number=userformed.phone_number
+                username=userformed.first_name
+                email=userformed.email
+                password1=userformed.password
                 user= Accounts.objects.create_user(first_name=first_name,last_name=last_name,phone_number=phone_number,username=username,email=email,password=password1)
-                
+                userformed.delete()
+
                 wallet=Wallet()
                 wallet.user=user
                 wallet.save()
 
                 referrel=Referrel()
-                referrel.user=user
+                referrel.user=user 
                 x=str(phone_number)
                 x=x[-4:]
                 
@@ -192,8 +241,10 @@ def verify(request):
                         existingwallet.amount=existingwallet.amount+50
                         existingwallet.save()
 
-                return redirect('login')
-         
+
+                resp= redirect('login')
+                resp.delete_cookie('phone')
+                return resp
         else:
             #print('thettipoi')
             messages.info(request,"Incorrect OTP")
@@ -211,7 +262,7 @@ def getotp():
     
 
     account_sid ='AC0c82fc0f46279be5c92de65a35a2a481'
-    auth_token = '1675921878c1b5c5b7fcd95285c5ea2c'
+    auth_token = 'd155bf45816e512f965a675281aac4be'
     client = Client(account_sid, auth_token)
 
     message = client.messages.create(
@@ -224,7 +275,7 @@ def getotp():
     #print(message.sid)
 
 def forgotpassword(request):
-    return render(request,'forgotpassword.html')
+    return render(request,'forgotpasswordReal.html')
 
 def loggedin(request):
     if request.method=='POST':
@@ -249,7 +300,7 @@ def loggedin(request):
                 return redirect('home')
             else:
                 messages.info(request,"Blocked by admin")
-    return render(request,'login.html') 
+    return redirect('login')
 
 def landingpage(request):
     if request.user.is_authenticated:
@@ -258,14 +309,16 @@ def landingpage(request):
          return redirect('store/home')
     
     listofproduct= Products.objects.all()
-    context={'listofproducts':listofproduct}
+    alloffers = RealOffers.objects.all()
+
+    context={'listofproducts':listofproduct,'alloffers':alloffers}
     return render(request,'index.html',context)
 from django.db.models import Q
 def searchG(request):
     keyword= request.GET['search']
-    listofproduct=Products.objects.order_by('-created_date').filter(Q(desciption__icontains=keyword)|Q(product_name=keyword)|Q(subcategory_name__subcategory_name=keyword))
-
-    context={'listofproducts':listofproduct,'guestsearch':True}
+    listofproduct=Products.objects.order_by('-created_date').filter(Q(desciption__icontains=keyword)|Q(product_name__icontains=keyword)|Q(subcategory_name__subcategory_name__icontains=keyword))
+    alloffers=RealOffers.objects.all()
+    context={'listofproducts':listofproduct,'alloffers':alloffers,'guestsearch':True}
     return render(request,'index.html',context)
     
 def statusupdate(request):
@@ -301,11 +354,7 @@ def home(request):
         
         paginator=Paginator(listofproduct,9)
         page=request.GET.get('page')
-        pagedproduct=paginator.get_page(page)
-        
-        
-        for i in listofproduct:    
-            i.afteroffer
+        pagedproduct=paginator.get_page(page)        
             
         context={'listofproducts':pagedproduct,'productcount':productcount,"inoffer":offer}
         return render(request,'userside/home.html',context)
@@ -313,15 +362,18 @@ def home(request):
         return redirect("landingpage")
 
 def orderdetails(request):
-    allorders=Orders.objects.all().order_by('-date')
+    listofproduct=Orders.objects.all().order_by('-date')
     name= request.user.username
-    context={'allorders':allorders,'name':name}
+    paginator=Paginator(listofproduct,10)
+    page=request.GET.get('page')
+    pagedproduct=paginator.get_page(page)
+    context={'name':name,'listofproducts':pagedproduct}
+    #context={'allorders':pagedproduct,'name':name}
     return render(request,'adminorders.html',context)
 
 def adminlogin(request):
     if request.user.is_authenticated:
-      if request.user.is_admin==True:
-        
+      if request.user.is_admin==True:        
         return redirect('adminhome')
       else:
         
@@ -338,7 +390,7 @@ def adminloggedin(request):
             if user.is_admin==True:
                 
                 login(request,user)
-                return redirect('adminhome')
+                return redirect('dashboard')
         else:
             messages.info(request,"Invalid Credentials")
             
@@ -354,8 +406,12 @@ def  adminhome(request):
          return redirect("login")
 
     name= request.user.username
-    key1=Accounts.objects.all().order_by('id')
-    context={'name':name,'key1':key1}
+    listofproduct=Accounts.objects.all().order_by('id')
+    paginator=Paginator(listofproduct,16)
+    page=request.GET.get('page')
+    pagedproduct=paginator.get_page(page)
+    context={'name':name,'listofproducts':pagedproduct}
+    #context={'name':name,'key1':key1}
     return render(request,'adminhome.html',context)
 
 @login_required(login_url='login')

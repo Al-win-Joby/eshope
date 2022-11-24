@@ -6,12 +6,11 @@
     <meta charset="utf-8">
     <title>GadKart admin</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="" name="keywords">
     <meta content="" name="description">
 
     <!-- Favicon -->
     <link href="{% static 'assets/admins/img/favicon.ico' %}" rel="icon">
-    <link rel="stylesheet" href="{% static 'assets/css1/login.css' %}">
+    
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,10 +29,16 @@
 
     <!-- Template Stylesheet -->
     <link href="{% static 'assets/admins/css/style.css' %}" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/i18n/zh-TW.min.js" integrity="sha512-whWyZS4LtoXu4LzFJbHIgL9Cr7Sf2+KyeEAGumtXN+8U234v1R89monfd9PLYnC0TNBArmPnkFOVo8ShuMpZaw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+   
+    
 </head>
 
 <body>
-    
+    <div class="container-fluid position-relative d-flex p-0">
+        <!-- Spinner Start -->
+        
+        <!-- Spinner End -->
 
 
         <!-- Sidebar Start -->
@@ -80,10 +85,10 @@
                 </a>
 
                 <div class="navbar-nav align-items-center ms-auto">
-      
+        
                     
                     <div class="nav-item dropdown">
-                        <a href="{% url 'logout' %}" class="nav-link " >
+                        <a href="{% url 'logout' %}" class="nav-link " data-bs-toggle="dropdown">
                             <span class="d-none d-lg-inline-flex">Logout</span>
                         </a>
                         
@@ -91,54 +96,56 @@
                 </div>
             </nav>
             <!-- Navbar End -->
-           
-            <!-- Recent Sales Start -->
+
+
+            <!-- Form Start -->
             <div class="container-fluid pt-4 px-4">
-                <div class="bg-secondary text-center rounded p-4">
-                    <div class="d-flex align-items-center justify-content-between mb-4">
-                        <h6 class="mb-0">Offer Details</h6>
-                        <a href="{% url 'addoffersRealproduct' %}">Add Product Offer</a>
+                <div class="row g-4"> 
+                    <div class="col-sm-12 col-xl-6 mx-auto">
+                        <form action="{% url 'addthisoffer' %}" method="POST"  enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="bg-secondary rounded h-100 p-4">
+                            <h6 class="mb-4">Add Offer</h6>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="floatingInput" required
+                                    placeholder="" name="code">
+                                <label for="floatingInput">Offer Name</label>
+                            </div>
 
-                        <a href="{% url 'addoffersReal' %}">Add Category Offer</a>
+                            <div class="form-floating ">
+                                <input type="number" class="form-control" id="floatingInput"
+                                    placeholder="" max="100" name="price">
+                                <label for="floatingInput">Offer Percentage</label>
+                            </div>
+                            
+                            <br>
+                            <div class="form-floating mb-3">
+                                <select id="select1" name="item" onchange='getit()' class="form-select mb-3" >
+                                    <option disabled selected="true"> Select Type</option> 
+                                    <option  value="category">Category</option>
+                                    <option  value="subcategory">Subcategory</option>
+                                    <option  value="Product">Product</option>
+                                    
+                                </select>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <select id="select2" name="item2" class="form-select mb-3" >
+                                    <option disabled selected="true">Select Item</option>
+                                    
+                                </select>
+                            </div>
+                            
+                            {% for message in messages %}
+                            <h3 class="text-center text-danger pt-2">{{message}}</h3>
+                            {% endfor %}
+                            
+                            <button type="submit" class="btn btn-primary">Add</button>
+                        </div>
+                       
+                        </form>
                     </div>
-                    <div class="table-responsive">
-                        <table class="table text-start align-middle table-bordered table-hover mb-0">
-                            <thead>
-                                <tr class="text-white">
-                                    
-                                    <th scope="col">Offer</th>
-                                    <th scope="col">Discount Percentage</th>
-                                    <th scope="col">Item</th>
-                                    
-                                </tr>
-
-                            </thead>
-                            <tbody>
-                                {% for i in alloffers %}
-                                <tr>
-                                    
-                                    <td>{{i.offername}}</td>
-                                    <td>{{i.offerpercentage}}%</td>
-                                    {% if i.product %}
-                                    <td>{{i.product.product_name}}</td>
-                                    {% elif i.category %}
-                                    <td>{{i.category.category_name}}</td>
-                                    {% else %}
-                                    <td>{{i.subcategory.subcategory_name}}</td>
-                                    {% endif %}
-                                    <td><button class="btn btn-danger" onclick="deleteoffer('{{i.id}}')">Delete</button></td>
-
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <!-- Recent Sales End -->
-
-
-            
+                    
+                    
 
 
             <!-- Footer Start -->
@@ -149,52 +156,33 @@
 
 
         <!-- Back to Top -->
+        <a  class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'assets/admins/lib/chart/chart.min.js' %}"></script>
-    <script src="{% static 'assets/admins/lib/easing/easing.min.js' %}"></script>
-    <script src="{% static 'assets/admins/lib/waypoints/waypoints.min.js' %}"></script>
-    <script src="{% static 'assets/admins/lib/owlcarousel/owl.carousel.min.js' %}"></script>
-    <script src="{% static 'assets/admins/lib/tempusdominus/js/moment.min.js' %}"></script>
-    <script src="{% static 'assets/admins/lib/tempusdominus/js/moment-timezone.min.js' %}"></script>
-    <script src="{% static 'assets/admins/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js' %}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- Template Javascript -->
-    <script>
-        function deleteoffer(id){
-            console.log(id)
-            Swal.fire({
-                title: 'Do you want to delete the offer?',
-                showDenyButton: false,
-                showCancelButton: true,
-                confirmButtonText: 'Delete',
-                
-              }).then((result) => {
-                /* Read more about isConfirmed, isDenied below */
-                if (result.isConfirmed) {
-                  $.ajax({
-                    method:'POST',
-                    url:'deleteoffer',
-                    data:{
-                        offerid:id,
-                        csrfmiddlewaretoken: '{{ csrf_token }}',
-                    },
-                    success:function(response){
-                        if (response.status)
-                        {
-                            
-                            window.location.href="adminoffersReal"
-                        }
-                    }
+    <script src="lib/chart/chart.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/tempusdominus/js/moment.min.js"></script>
+    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
-                  })
-                } 
-              })
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    
+    <script>
+        function getit(){
+            x=document.getElementById('select1').value
+            console.log(x)
+            $('#select2').load("selectitem/"+x)
+
         }
     </script>
+    
+</body>
 
 </html>

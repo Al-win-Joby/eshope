@@ -26,7 +26,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for i in key1 %}
+                                {% for i in listofproducts %}
                                 <tr>
                                     
                                     <td>{{i.first_name}}</td>
@@ -35,23 +35,21 @@
                                     <td>{{i.last_login}}</td>
                                     <td>{{i.is_admin}}</td>
                                     <td>{{i.is_staff}}</td>
-                                    <form action="{% url 'edit' pk=i.id %}" method="post">
+                                    <form id='edit{{forloop.counter}}' action="{% url 'edit' pk=i.id %}" method="post">
                                     {% csrf_token %}
                                     {% if i.is_staff is True %}
-                                    <td><button class="btn btn-sm btn-warning" type="submit">Block</button></td>
+                                    <td><button onclick="block('edit{{forloop.counter}}','{{i.first_name}}')" class="btn btn-sm btn-warning" type="submit">Block</button></td>
                                     </form>
-                                    <form action="{% url 'edit' pk=i.id %}"  method="post">
+
+                                    <form id ='unedit{{forloop.counter}}' action="{% url 'edit' pk=i.id %}"  method="post">
                                     {% csrf_token %}
                                     {% else %}
-                                    <td><button class="btn btn-sm btn-success" type="submit">Unblock</button></td>
+                                    <td><button onclick="unblock('unedit{{forloop.counter}}','{{i.first_name}}')" class="btn btn-sm btn-success" type="submit">Unblock</button></td>
                                     {% endif %}
                                     </form>
                                     
 
-                                    {% comment %} <form action="{% url 'delete' pk=i.id %}"  method="post">
-                                    {% csrf_token %}
-                                    <td><button class="btn btn-sm btn-primary" onclick=checker()>Delete</button></td>
-                                    </form> {% endcomment %}
+                                    
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -59,5 +57,85 @@
                     </div>
                 </div>
             </div>
+
+            <nav class="mt-4" aria-label="Page navigation sample">
+                {% if listofproducts.has_other_pages %}
+                    <ul class="pagination ">
+                        {% if listofproducts.has_previous %}
+                        <li class="page-item "><a class="page-link bg-secondary text-white" href="?page={{listofproducts.previous_page_number}}">Previous</a></li>
+                        {% else %}
+                        <li class="page-item disabled"><a class="page-link bg-secondary text-white" href="#">Previous</a></li>
+                        {% endif %}
+            
+                        {% for i in listofproducts.paginator.page_range %}
+                            {% if listofproducts.number == i %}
+                                <li class="page-item active"><a class="page-link bg-secondary text-white" href="">{{i}}</a></li>
+                            {% else %}
+                            <li class="page-item "><a class="page-link bg-secondary text-white" href="?page={{i}}">{{i}}</a></li>
+                            {% endif %}
+                        {% endfor %}
+            
+                        {% if listofproducts.has_next %}
+                        <li class="page-item"><a class="page-link bg-secondary text-white" href="?page={{listofproducts.next_page_number}}">Next</a></li>
+                        {% else %}
+                        <li class="page-item disabled"><a class="page-link bg-secondary text-white" href="">Next</a></li>
+                        {% endif %}
+                    </ul>
+                {% endif %}
+            </nav> 
+
+            <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function block(x,name){
+        console.log(name)
+        Swal.fire({
+            title: 'Do you want to block '+name+' ?',
+            showDenyButton: false,
+            showCancelButton: true,
+            confirmButtonText: 'Block',
+            
+          }).then((result) => 
+          {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isDenied){
+                event.preventDefault();
+                console.log("block aakila")
+            }
+            else if (result.isConfirmed){
+                console.log("blcok aaki")
+                let form= document.getElementById(x)
+                form.submit();
+            }
+
+           })
+        event.preventDefault();
+    }
+    function unblock(x,name){
+        console.log(name)
+        Swal.fire({
+            title: 'Do you want to unblock '+name+' ?',
+            showDenyButton: false,
+            showCancelButton: true,
+            confirmButtonText: 'Unblock',
+            
+          }).then((result) => 
+          {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isDenied){
+                event.preventDefault();
+                console.log("block aakila")
+            }
+            else if (result.isConfirmed){
+                console.log("blcok aaki")
+                let form= document.getElementById(x)
+                form.submit();
+            }
+
+           })
+        event.preventDefault();
+    }
+
+</script>
 
 {% endblock %}            <!-- Recent Sales End -->

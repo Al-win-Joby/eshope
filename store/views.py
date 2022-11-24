@@ -271,7 +271,7 @@ def myorders(request):
     return render(request,'userside/myorders.html',context)
  
 def search(request):
-    print("search")
+    
     products=None
     if 'keyword' in request.GET:
         keyword=request.GET['keyword']
@@ -338,8 +338,11 @@ def cart(request):
         
         for eachcartproduct in allcartproduct:
             count=count+eachcartproduct.totalquantity
-        
-        context={'allcart':allcart}
+        x=0
+        for i in allcart:
+            x=x+1
+           
+        context={'allcart':allcart,'x':x}
         return render(request,'userside/cart.html',context)
     else:
         return redirect('login')
@@ -575,9 +578,10 @@ def checkcoupon(request):
     else:
         return JsonResponse({'status':False})
     
-def removefromcart(request,productid):
+def removefromcart(request):
     name= request.user.id
     print(name)
+    productid=request.GET.get('productid')
     usernameid=Accounts.objects.get(id=name)
     userx=usernameid.id
     fetchcart=Cart.objects.filter(product_id=productid).filter(username_id=name)
@@ -666,11 +670,27 @@ def downloadreport(request):
     else:
         return salesexcel(fromm,to)
 
+def yearly(request):
+    data=Orders.objects.values('date__year').annotate(rev=Sum('price'),
+    orders=Count('id'),
+    delivered=Count('id',Q(status="Delivered")),
+    Cancelled=Count('id',Q(status="Cancelled")|Q(status="Returned")),)
+    print(data)
+    return render(request,'adminsalesReportyearly.html',{'data':data})
+
+def monthly(request):
+    data=Orders.objects.values('date__month').annotate(rev=Sum('price'),
+    orders=Count('id'),
+    delivered=Count('id',Q(status="Delivered")),
+    Cancelled=Count('id',Q(status="Cancelled")|Q(status="Returned")),)
+    print(data)
+    return render(request,'adminsalesReportmonth.html',{'data':data})
+
 
 import time
 def salespdf(fromm,to):
-
-    dd=Orders.objects.all().filter(date__range=(fromm,to)).filter(status="Delivered")
+    
+    dd=Orders.objects.filter(date__range=(fromm,to)).filter(status="Delivered")
     
     pdf = render_to_pdf('salesreport.html', {'rowrev':dd})
     
@@ -776,9 +796,13 @@ def adminoffers(request):
     context={'alloffers':newoffers}
     return render(request,'adminoffers.html',context)
 
-def addoffersReal(request):
-    
+def addoffersReal(request):  
     return render(request,'addofferReal.html')
+
+def addoffersRealproduct(request):
+    allproducts=Products.objects.all()
+    context={'allproducts':allproducts}
+    return render(request,'addofferRealproduct.html',context)
 
 def salesReport(request):
     key1=Orders.objects.filter().order_by('-date__date')

@@ -73,8 +73,9 @@
 			{% endif %}
 		</div> <!-- price-wrap .// -->
 	</td>
+
 	<td class="text-right"> 
-	<a href="{% url 'removefromcart' productid=cart.product_id.id %}" class="btn btn-danger"> Remove</a>
+	<a id='remove{{forloop.counter}}'  onclick="remove('{{cart.product_id.id}}')" class="btn btn-danger text-white"> Remove</a>
 	</td>
 	
 </tr>
@@ -86,11 +87,8 @@
 
 	</aside> <!-- col.// -->
 
-	
-
-
 	<aside class="col-lg-3">
-				<!-- ////////////////// lg-3 for offer  begin ////////////////////// -->
+			<!-- ////////////////// lg-3 for offer  begin ////////////////////// -->
 
 
 		<div class="card">
@@ -116,7 +114,9 @@
 				<p class="text-center mb-3">
 					<img src="{% static 'assets/images/misc/payments.png' %}" height="26">
 				</p>
-				<a href="{% url 'checkout' %}" class="btn btn-primary btn-block"> Checkout </a>
+				<form action="checkout">
+				<button {%if x == 0 %}  disabled {%endif%} class="btn btn-primary btn-block"> Checkout </button>
+				</form>
 				<a href="{% url 'home' %}" class="btn btn-light btn-block">Continue Shopping</a>
 			</div> <!-- card-body.// -->
 	
@@ -125,9 +125,35 @@
 </aside>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
  <!-- col.// -->
 <script>
+
+	function remove(x){
+		console.log(x)
+		Swal.fire({
+			title: 'Do you want to remove this product?',
+			showDenyButton: false,
+			
+			confirmButtonText: 'Remove',	
+			showCancelButton: true,		
+		  }).then((result) => 
+		  {
+			/* Read more about isConfirmed, isDenied below */
+			if (result.isDenied){
+				event.preventDefault();
+				
+			}
+			else if (result.isConfirmed){
+				window.location.href="removefromcart?productid="+x
+				
+			}
+
+		   })
+		event.preventDefault();
+		
+	}
 
 	function updatequantity(a,totquant,pid,price,sellingprice,priceincrement){
 		quantvalue=totquant
@@ -190,12 +216,11 @@
 					
 				}
 				else{
-					swal({
-						title: "Add Quantity Failed",
-						text: "Product Limited",
-						icon: "warning",						
-						dangerMode: true,
-					  })
+					Swal.fire(
+						'Add Quantity Failed',
+						'Product Quantity Limited',
+						'error'
+					  )
 				}
 			}
 		}) 

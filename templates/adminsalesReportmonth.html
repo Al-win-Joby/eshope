@@ -27,13 +27,23 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{% static 'assets/admins/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
 
     <!-- Template Stylesheet -->
     <link href="{% static 'assets/admins/css/style.css' %}" rel="stylesheet">
+
+
 </head>
 
 <body>
-    
+    <div class="container-fluid position-relative d-flex p-0">
+        <!-- Spinner Start -->
+        <div id="spinner" class="show bg-dark position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
 
 
         <!-- Sidebar Start -->
@@ -58,9 +68,10 @@
                     <a href="{% url 'categories' %}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Category</a>
                     <a href="{% url 'subcategories' %}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Subcategory</a>                    
                     <a href="{% url 'orderdetails' %}" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Order Details</a>
-                    <a href="{% url 'salesReport' %}" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Sales Report</a>
+                    <a href="{% url 'salesReport' %}" class="nav-item nav-link active"><i class="fa fa-chart-bar me-2"></i>Sales Report</a>
                     <a href="{% url 'adminoffers' %}" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Coupons</a>
-                    <a href="{% url 'adminoffersReal' %}" class="nav-item nav-link active"><i class="fa fa-chart-bar me-2"></i>Offers</a>                    
+                    <a href="{% url 'adminoffersReal' %}" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Offers</a>                    
+                    
                     
                 </div>
             </nav>
@@ -80,7 +91,7 @@
                 </a>
 
                 <div class="navbar-nav align-items-center ms-auto">
-      
+     
                     
                     <div class="nav-item dropdown">
                         <a href="{% url 'logout' %}" class="nav-link " >
@@ -91,43 +102,51 @@
                 </div>
             </nav>
             <!-- Navbar End -->
-           
+            <div class="d-flex justify-content-between pt-2 px-4" > 
+                <a href="{% url 'yearly' %}" class="btn btn-secondary">Yearly</a>
+                <a href="{% url 'salesReport' %}" class="btn btn-secondary">All Sales</a>
+                <a href="{% url 'monthly' %}" class="btn btn-secondary ml-5">Monthly</a>
+            </div>
             <!-- Recent Sales Start -->
-            <div class="container-fluid pt-4 px-4">
+            <div class="container-fluid pt-2 px-4">
+                
                 <div class="bg-secondary text-center rounded p-4">
+                    <form action="downloadreport" method="POST">
+                    {% csrf_token %}
                     <div class="d-flex align-items-center justify-content-between mb-4">
-                        <h6 class="mb-0">Offer Details</h6>
-                        <a href="{% url 'addoffersRealproduct' %}">Add Product Offer</a>
-
-                        <a href="{% url 'addoffersReal' %}">Add Category Offer</a>
+                        <div class="">
+                        <h6 class="mb-0">Yearly Sales Report</h6>
+                        </div>
+                        
+                       
+                    
                     </div>
+                    </form>
                     <div class="table-responsive">
                         <table class="table text-start align-middle table-bordered table-hover mb-0">
                             <thead>
                                 <tr class="text-white">
                                     
-                                    <th scope="col">Offer</th>
-                                    <th scope="col">Discount Percentage</th>
-                                    <th scope="col">Item</th>
-                                    
+                                    <th scope="col">Sl No   </th>
+                                    <th scope="col">Month  </th>                   
+                                    <th scope="col">Orders  </th>
+                                    <th scope="col">Revenue    </th>                    
+                                    <th scope="col">Cancelled</th>
+                                    <th scope="col">Delivered </th>
+    
                                 </tr>
-
                             </thead>
                             <tbody>
-                                {% for i in alloffers %}
+                                {% for i in data %}
                                 <tr>
                                     
-                                    <td>{{i.offername}}</td>
-                                    <td>{{i.offerpercentage}}%</td>
-                                    {% if i.product %}
-                                    <td>{{i.product.product_name}}</td>
-                                    {% elif i.category %}
-                                    <td>{{i.category.category_name}}</td>
-                                    {% else %}
-                                    <td>{{i.subcategory.subcategory_name}}</td>
-                                    {% endif %}
-                                    <td><button class="btn btn-danger" onclick="deleteoffer('{{i.id}}')">Delete</button></td>
-
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{i.date__month}}</td>
+                                    <td>{{i.orders}}</td>
+                                    <td>{{i.rev}}</td>
+                                    <td>{{i.Cancelled}}</td>
+                                    <td>{{i.delivered}}</td>
+                            
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -161,40 +180,40 @@
     <script src="{% static 'assets/admins/lib/tempusdominus/js/moment.min.js' %}"></script>
     <script src="{% static 'assets/admins/lib/tempusdominus/js/moment-timezone.min.js' %}"></script>
     <script src="{% static 'assets/admins/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js' %}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- Template Javascript -->
-    <script>
-        function deleteoffer(id){
-            console.log(id)
-            Swal.fire({
-                title: 'Do you want to delete the offer?',
-                showDenyButton: false,
-                showCancelButton: true,
-                confirmButtonText: 'Delete',
-                
-              }).then((result) => {
-                /* Read more about isConfirmed, isDenied below */
-                if (result.isConfirmed) {
-                  $.ajax({
-                    method:'POST',
-                    url:'deleteoffer',
-                    data:{
-                        offerid:id,
-                        csrfmiddlewaretoken: '{{ csrf_token }}',
-                    },
-                    success:function(response){
-                        if (response.status)
-                        {
-                            
-                            window.location.href="adminoffersReal"
-                        }
-                    }
 
+    <!-- Template Javascript -->
+    <script src="{% static 'assets/admins/js/main.js' %}"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script>
+        function checker(){
+            result= confirm("Are you sure you want to delete");
+            if(result==false)
+            {
+                event.preventDefault();
+            }
+        }
+
+        function checkdates(){
+            console.log("kdi")
+            x=document.getElementById('startdate').value
+            y=document.getElementById('enddate').value
+
+            
+            if(x=='' || y==''){
+                Swal.fire({
+                    title: 'Please select a date range',
+                    showDenyButton: false,
+                    showCancelButton: false,
+                    confirmButtonText: 'Ok',
+                    
                   })
-                } 
-              })
+                event.preventDefault()
+            }
+       
+            
         }
     </script>
+</body>
 
 </html>

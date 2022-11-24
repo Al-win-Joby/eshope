@@ -12,6 +12,8 @@ urlpatterns = [
     path('signed_up',views.signed_up,name="signed_up"),
     path('verify',views.verify,name="verify"),
     path('verifylogin',views.verifylogin,name="verifylogin"),
+    path('otplogin',views.otplogin,name="otplogin"),
+
     path('forgotpassword',views.forgotpassword,name="forgotpassword"),
     path('statusupdate',views.statusupdate,name="statusupdate"),
     path('verifynumber',views.verifynumber,name="verifynumber"),

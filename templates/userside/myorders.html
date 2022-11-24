@@ -103,9 +103,9 @@
 							<div class="col-1 my-auto">
 									<form action="{% url 'downloadreceipt' pk=i.id %}" method="POST">
 										{% csrf_token %}
-									<button class="btn btn-outline-secondary" type="submit" {% if i.status != "Delivered" %} disabled {% endif %}><span class="material-symbols-outlined">
+									<button class="btn btn-outline-secondary" type="submit" {% if i.status == "Cancelled" or i.status == "Returned"  %} disabled {% endif %}><span class="material-symbols-outlined">
 										file_download
-										</span></button>
+										</span></button> 
 									</form>
 							</div>
 							<div class="my-auto">

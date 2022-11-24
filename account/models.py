@@ -76,6 +76,13 @@ class Accounts(AbstractBaseUser):
     def has_module_perms(self,add_label):
         return True
 
+class tempAccount(models.Model):
+    first_name      =models.CharField(max_length=200)
+    last_name       =models.CharField(max_length=200)
+    
+    email           =models.EmailField(max_length=200,unique=True)
+    phone_number    =models.CharField(max_length=200)
+    password        =models.CharField(max_length=200)
 class Address(models.Model):
     username_id=models.ForeignKey(Accounts,on_delete=models.CASCADE)
     country=models.CharField(max_length=200)

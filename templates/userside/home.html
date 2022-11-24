@@ -127,6 +127,27 @@
 	<div class="col-md-4">
 		<a href="{{product.geturl}}">
 		<figure class="card card-product-grid">
+			{% for i in inoffer%}
+			{%if i.product == product%}
+			<a href="" style="
+			position:absolute;
+			z-index:10;
+			background-color:#F10000;
+			height:45px;
+			width:60px;
+			border-radius:0px 9px 5px 0px;
+			top:20px;
+			left:0px;
+			font-size:20px;
+			font-weight: 550;
+			text-align:center;
+			font-size:16px;
+			color:#fff;
+			line-height:14px;
+			vertical-align: center;
+			padding:10px 3px 5px 6px;">{{i.offerpercentage}}% OFF</a>
+			{% endif %}
+			{% endfor %}
 			<div class="img-wrap"> 
 				<a href="{{product.geturl}}"><img src="{{ product.images.url }}"></a>
 				

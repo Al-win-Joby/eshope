@@ -32,17 +32,7 @@
     <!-- Template Stylesheet -->
     <link href="{% static 'assets/admins/css/style.css' %}" rel="stylesheet">
 
-    <style>
-        input[type="date"] { 
-            background: transparent;
-            color: white;
-          }
-          
-          inpu t[type="date"]::-webkit-calendar-picker-indicator {
-            filter: invert(100%);
-          }
-          
-    </style>
+   
 </head>
 
 <body>
@@ -99,9 +89,7 @@
                 <a  class="sidebar-toggler flex-shrink-0">
                     <i class="fa fa-bars"></i>
                 </a>
-                <form class="d-none d-md-flex ms-4">
-                    <input class="form-control bg-dark border-0" type="search" placeholder="Search">
-                </form>
+
                 <div class="navbar-nav align-items-center ms-auto">
      
                     
@@ -114,17 +102,23 @@
                 </div>
             </nav>
             <!-- Navbar End -->
-           
+            <div class="d-flex justify-content-between pt-2 px-4" > 
+                <a href="{% url 'yearly' %}" class="btn btn-secondary">Yearly</a>
+                <a href="" class="btn btn-secondary ml-5">Monthly</a>
+
+            </div>
             <!-- Recent Sales Start -->
-            <div class="container-fluid pt-4 px-4">
+            <div class="container-fluid pt-2 px-4">
                 
                 <div class="bg-secondary text-center rounded p-4">
                     <form action="downloadreport" method="POST">
-                        {% csrf_token %}
+                    {% csrf_token %}
                     <div class="d-flex align-items-center justify-content-between mb-4">
                         <div class="">
                         <h6 class="mb-0">Sales Report</h6>
                         </div>
+                        
+                       
                         <div>
                             <label for="startdate">From</label> 
                             <input id="startdate" type="date" name="from">
@@ -231,7 +225,7 @@
             
             if(x=='' || y==''){
                 Swal.fire({
-                    title: 'Please select a price range',
+                    title: 'Please select a date range',
                     showDenyButton: false,
                     showCancelButton: false,
                     confirmButtonText: 'Ok',

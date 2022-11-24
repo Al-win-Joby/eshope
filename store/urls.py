@@ -28,8 +28,10 @@ urlpatterns = [
      path('addoffers',views.addoffers,name="addoffers"),
      path('salesReport',views.salesReport,name="salesReport"), 
      path('addoffersReal',views.addoffersReal,name="addoffersReal"),
+     path('addoffersRealproduct',views.addoffersRealproduct,name="addoffersRealproduct"),
+     
      path('minus/<int:productid>',views.minus,name="minus"),
-     path('removefromcart/<int:productid>',views.removefromcart,name="removefromcart"),
+     path('removefromcart',views.removefromcart,name="removefromcart"),
      path('addaddress',views.addaddress,name="addaddress"),
      
      path('deleteoffer',views.deleteoffer,name="deleteoffer"),
@@ -47,6 +49,10 @@ urlpatterns = [
      path('myprofile',views.myprofile,name="myprofile"),
      path('search',views.search,name="search"),
      path('revenuepdf',views.revenuepdf,name="revenuepdf"),
+
+     path('yearly',views.yearly,name="yearly"),
+     path('monthly',views.monthly,name="monthly"),
+
 
      path('salespdf',views.salespdf,name="salespdf"),
      path('downloadreceipt/<int:pk>',views.downloadreceipt,name="downloadreceipt"),

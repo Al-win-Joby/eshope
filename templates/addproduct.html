@@ -84,9 +84,7 @@
                 <a class="sidebar-toggler flex-shrink-0">
                     <i class="fa fa-bars"></i>
                 </a>
-                <form class="d-none d-md-flex ms-4">
-                    <input class="form-control bg-dark border-0" type="search" placeholder="Search">
-                </form>
+
                 <div class="navbar-nav align-items-center ms-auto">
         
                     
@@ -116,15 +114,17 @@
                             </div>
                             <div class="form-floating mb-3 row">
                                 <div class="col-6">
-                                <input type="number" class="form-control" id="floatingInput"
-                                    placeholder="Price" required name="productprice">
-                                <label for="floatingInput"></label>
+                                <input type="number" class="form-control" id="pricee"
+                                    placeholder="Price" oninput='pricecheck()' required name="productprice">
+                                    
+                                <label for="pricee"></label>
+                                
                                 </div>
                                 
                                 <div class="col-6">
-                                    <input type="number" class="form-control" id="floatingInput" required
-                                        placeholder="Available Stock" name="stock">
-                                    <label for="floatingInput"></label>
+                                    <input type="number" class="form-control" id="stock" required
+                                        placeholder="Available Stock" oninput='stockcheck()' name="stock">
+                                    <label for="stock"></label>
                                 </div>
                             </div>
                             
@@ -152,21 +152,29 @@
                                 </select>
 
                             </div>
-                            <!-- here comes the subcategory -->
-                            <div id="" class="" data-cropzee="cropzee-input"></div>
-                            <div class="mb-3">
-                                <label for="floatingTextarea">Upload Thumbnail Image</label>
-                                <input id="imgFile" oninput="viewImage1()" required class="form-control bg-dark" type="file" name="productimage" >
-                                <img src="" id="image1" alt="" class="imggmi" style="height:10px">
-                            </div>
-                           
 
+
+                            <!-- here comes the crop div -->
+
+                            <div id="" class="" data-cropzee="cropzee-input"></div>
+                            
+                            <div style="display:flex">
+                                <div id="screen1" class="imggmi image-container" style="height: 150px; width: auto"></div> <br>
+                              </div>
+                              <button type="button" class=" btn btn-outline-info " hidden id="crop-1">Crop</button>
+                            
+                              <div class="mb-3">
+                                <label for="floatingTextarea">Upload Thumbnail Image</label>
+                                <input id="imgFile" oninput="viewImage1()" class="form-control bg-dark" type="file" name="productimage" >
+                                <img src="" id="image1" alt="" class="imggmi" style="height:100px">
+                            </div>
+                            
                             <div class="mb-3">
                                 <label for="floatingTextarea">Upload Images</label>
                                 <input id="imgFiles" oninput="multi()" class="form-control bg-dark"  type="file" multiple name="productimages" >
                             </div>
                          
-                            <button type="submit" class="btn btn-primary">Add</button>
+                            <button type="submit" id="add" class="btn btn-primary">Add</button>
                         </div>
                         {% for message in messages %}
                             <h3 class="text-center text-danger pt-2">{{message}}</h3>
@@ -215,6 +223,89 @@
         const input1 = document.getElementById('imgFile')
       
       
+        function viewImage1(event) {
+           
+          var fileInput1 = document.getElementById('imgFile');
+          var filePath1 = fileInput1.value;
+          var allowedExtensions = /(\.jpg)$/i;
+          if (!allowedExtensions.exec(filePath1)) {
+            fileInput1.value = '';
+            swal("There is a problem!", "Please choose image file.");
+            return false;
+          } else {
+            document.getElementById('image1').src = URL.createObjectURL(event.target.files[0])
+            
+          }
+        }
+      
+        input1.addEventListener('change', () => {
+          const img_data1 = input1.files[0]
+          const url1 = URL.createObjectURL(img_data1)
+          imagebox1.innerHTML = `<img src="${url1}" id="img1" style="width:100%;">`
+          const img1 = document.getElementById('img1')
+          document.getElementById('screen1').style.display = 'block'
+      
+          document.getElementById('crop-1').style.display = 'block'
+          document.getElementById('image1').style.display = 'block'
+            
+          crop_btn1.removeAttribute("hidden")
+              
+
+          const cropper1 = new Cropper(img1, {
+            autoCropArea: 1,
+            viewMode: 1,
+            scalable: false,
+            zoomable: false,
+            movable: false,
+            minCropBoxWidth: 50,
+            minCropBoxHeight: 50,
+           
+          })
+      
+          crop_btn1.addEventListener('click', () => {
+            
+            
+            cropper1.getCroppedCanvas().toBlob((blob) => {
+              let fileInputElement1 = document.getElementById('imgFile');
+              let file1 = new File([blob], img_data1.name, { type: "image/*", lastModified: new Date().getTime() });
+              let container1 = new DataTransfer();
+              container1.items.add(file1);
+              fileInputElement1.files = container1.files;
+              document.getElementById('image1').src = URL.createObjectURL(fileInputElement1.files[0])
+              document.getElementById('screen1').style.display = 'none'
+              document.getElementById('crop-1').style.display = 'none'
+              
+            })
+          })
+      
+        })
+      
+        function pricecheck(){
+            nregx= /^[1-9]\d*$/
+            if(!nregx.test(document.getElementById('pricee').value))
+            {
+                document.getElementById('pricee').style.borderColor="red";  
+                document.getElementById('add').setAttribute("disabled",'')
+            }
+            else{
+                document.getElementById('pricee').style.borderColor="";
+                document.getElementById('add').removeAttribute("disabled")
+            }
+        }
+        function stockcheck(){
+            nregx= /^[1-9]\d*$/
+            if(!nregx.test(document.getElementById('stock').value))
+            {
+                document.getElementById('stock').style.borderColor="red";
+                document.getElementById('add').setAttribute("disabled",'')
+            }
+            else{
+                document.getElementById('stock').style.borderColor='';
+
+                document.getElementById('add').removeAttribute("disabled")
+            }
+        }
+
         function viewImage1() {
            
           var fileInput1 = document.getElementById('imgFile');
@@ -222,7 +313,7 @@
           var allowedExtensions = /(\.(jpg|png|jpeg))$/i;
           if (!allowedExtensions.exec(filePath1)) {
             fileInput1.value = '';
-            swal("There is a problem!", "Please choose image file.");
+            swal("Not an Image", "Please choose image file.");
             return false;
           } 
         }
@@ -235,7 +326,7 @@
                 if(ext!== "png" && ext!== "jpg" && ext!== "jpeg")  
                 {
                     selection.value=''
-                    swal("There is a problem!", "Please choose image file.");
+                    swal("Problem!", "Please choose an image file.");
                     return false;
                 }
             } 
