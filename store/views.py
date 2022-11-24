@@ -848,15 +848,15 @@ def addthisoffer(request):        ##For Real Offer##
     item2=request.POST.get('item2')
     newoffer=RealOffers()
     if item == "category":
-        catoffer=Category.objects.get(slug=item2)
+        catoffer=Category.objects.get(category_name=item2)
         newoffer.category=catoffer
 
     elif item == "subcategory":
-        subcat=Subcategory.objects.get(slug=item2)
+        subcat=Subcategory.objects.get(subcategory_name=item2)
         newoffer.subcategory=subcat
         
     else:
-        product=Products.objects.get(slug=item2)
+        product=Products.objects.get(product_name=item2)
         newoffer.product=product
     
     newoffer.offername=offername
