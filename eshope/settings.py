@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-_4my+nxdq91mb*6v97h*^#addm(i9*vi6z@vjkee*hk^-2cf#&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['.gadkart.tk','13.231.75.47','localhost']
 

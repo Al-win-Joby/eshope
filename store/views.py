@@ -692,7 +692,7 @@ def monthly(request):
 import time
 def salespdf(fromm,to):
     
-    dd=Orders.objects.filter(date__range=(fromm,to)).filter(status="Delivered")
+    dd=Orders.objects.filter(date__range=(fromm,to))
     
     pdf = render_to_pdf('salesreport.html', {'rowrev':dd})
     
@@ -709,7 +709,7 @@ def salespdf(fromm,to):
 from docx import Document
 from django.http import HttpResponse
 def salesdoc(fromm,to):
-    dd=Orders.objects.filter(date__range=(fromm,to)).filter(status="Delivered")
+    dd=Orders.objects.filter(date__range=(fromm,to))
 
     document= Document()
     document.add_heading('Sales Report',0)

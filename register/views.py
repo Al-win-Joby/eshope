@@ -288,7 +288,7 @@ def loggedin(request):
                 resp= redirect('home')
                 if 'productid' in request.COOKIES:
 
-                    if Products.objects.filter(id=int(request.COOKIES['productid'])).exsists():
+                    if Products.objects.filter(id=int(request.COOKIES['productid'])).exists():
                         prod=Products.objects.get(id=int(request.COOKIES['productid']))
                         resp.delete_cookie('productid')
 
@@ -390,9 +390,8 @@ def adminloggedin(request):
                 login(request,user)
                 return redirect('dashboard')
         else:
-            messages.info(request,"Invalid Credentials")
-            
-    return render(request,'adminlogin.html') 
+            messages.info(request,"Invalid Credentials")            
+    return render(request,'admindashboard.html') 
 
 def logout1(request):
     logout(request)
@@ -410,7 +409,7 @@ def  adminhome(request):
     pagedproduct=paginator.get_page(page)
     context={'name':name,'listofproducts':pagedproduct}
     #context={'name':name,'key1':key1}
-    return render(request,'adminhome.html',context)
+    return render(request,'admindashboard.html',context)
 
 @login_required(login_url='login')
 def createadminuser(request):
@@ -462,3 +461,7 @@ def delete(request,pk):
     get_data=Accounts.objects.get(id=pk)
     get_data.delete()
     return redirect(adminhome)
+
+def error_404_views(request,exception):
+    print("RRRRRR")
+    return render(request,'404.html')
