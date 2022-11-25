@@ -124,7 +124,7 @@
                                 <select id="select2" name="item2" class="form-select mb-3" >
                                     <option  selected >Select Product</option>
                                     {%for i in allproducts%}
-                                    <option  >{{i.product_name}}</option>
+                                    <option value={{i.slug}}>{{i.product_name}}</option>
 
                                     {%endfor%}
                                 </select>
