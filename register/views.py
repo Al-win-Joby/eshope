@@ -43,12 +43,8 @@ def signedup(request):
             return redirect('signup')
            
         if password1==password2: 
-            if Accounts.objects.filter(username=username).exists():
-                messages.info(request,"User exist")
-                return redirect('signup')
                 
-                
-            elif Accounts.objects.filter(email=email).exists():
+            if Accounts.objects.filter(email=email).exists():
                 messages.info(request,"Email exist")
                 return redirect('signup')
             elif Accounts.objects.filter(phone_number=phone_number).exists():
@@ -289,11 +285,13 @@ def loggedin(request):
             
             if user.is_staff==True:
                 login(request,user)
-                
+                resp= redirect('home')
                 if 'productid' in request.COOKIES:
-                    prod=Products.objects.get(id=int(request.COOKIES['productid']))
-                    
-                    
+
+                    if Products.objects.filter(id=int(request.COOKIES['productid'])).exsists():
+                        prod=Products.objects.get(id=int(request.COOKIES['productid']))
+                        resp.delete_cookie('productid')
+
                     return pp.productshome(request,prod.category_name.slug,prod.slug)
 
                     

@@ -667,6 +667,8 @@ def downloadreport(request):
 
     if rad == "pdf":
         return salespdf(frommm,too)
+    elif rad == "doc":
+        return salesdoc(fromm,too)
     else:
         return salesexcel(fromm,to)
 
@@ -703,6 +705,48 @@ def salespdf(fromm,to):
         response['Content-Disposition']=content
         return response
     return HttpResponse("Not found")
+
+from docx import Document
+from django.http import HttpResponse
+def salesdoc(fromm,to):
+    dd=Orders.objects.filter(date__range=(fromm,to)).filter(status="Delivered")
+
+    document= Document()
+    document.add_heading('Sales Report',0)
+
+    table = document.add_table(rows=1, cols=8)
+    # Adding heading in the 1st row of the table
+    row = table.rows[0].cells
+    row[0].text = 'Id'
+    row[1].text = 'User'
+    row[2].text = 'Product'
+    row[3].text = 'Qty'
+    row[4].text = 'Address'
+    row[5].text = 'MRP'
+    row[6].text = 'Selling Price'
+    row[7].text = 'Total Price'
+
+    k=0
+    # Adding data from the list to the table
+    for i in dd:   
+        k=k+1
+        # Adding a row and then adding data in it.
+        row = table.add_row().cells
+        # Converting id to string as table can only take string input
+        row[0].text = str(k)
+        row[1].text = str(i.user.username)
+        row[2].text = str(i.product.product_name)
+        row[3].text = str(i.quantity)
+        row[4].text = str(i.Address.housename)
+        row[5].text = str(i.product.price)
+        row[6].text = str(i.product.sellingprice)
+        row[7].text = str(i.price)
+
+
+    response =HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+    response['Content-Disposition'] = 'attachment;filename=download.docx'
+    document.save(response)
+    return response
 
 def salesexcel(fromm,to):
     response = HttpResponse(content_type='application/ms-excel')
