@@ -86,7 +86,7 @@ def signed_up(request):
 
 
     account_sid ='AC0c82fc0f46279be5c92de65a35a2a481'
-    auth_token = '21816cd3c2fb16d9fb0af0800b9bbc1c'
+    auth_token = 'b3c1224273373418222c46e10f6ae789'
     client = Client(account_sid, auth_token)
 
     message = client.messages.create(
@@ -121,7 +121,7 @@ def verifynumber(request):
             otp=random.choice(list)
 
             account_sid ='AC0c82fc0f46279be5c92de65a35a2a481'  
-            auth_token = '21816cd3c2fb16d9fb0af0800b9bbc1c'
+            auth_token = 'b3c1224273373418222c46e10f6ae789'
             client = Client(account_sid, auth_token)
 
             message = client.messages.create(
@@ -197,7 +197,6 @@ def verify(request):
             global referrelG
            
             
-
             if 'first_name' in request.COOKIES:
                 userformed=tempAccount.objects.get(first_name= request.COOKIES['first_name'])
             else:
@@ -223,8 +222,7 @@ def verify(request):
             x=x[-4:]
             
             code = first_name+x
-            referrel.code=code
-            
+            referrel.code=code            
             referrel.save()
 
 
@@ -258,7 +256,7 @@ def getotp():
     
 
     account_sid ='AC0c82fc0f46279be5c92de65a35a2a481'
-    auth_token = '21816cd3c2fb16d9fb0af0800b9bbc1c'
+    auth_token = 'b3c1224273373418222c46e10f6ae789'
     client = Client(account_sid, auth_token)
 
     message = client.messages.create(
@@ -391,6 +389,8 @@ def adminloggedin(request):
                 return redirect('dashboard')
         else:
             messages.info(request,"Invalid Credentials")            
+    return redirect('dashboard')
+    
     return render(request,'admindashboard.html') 
 
 def logout1(request):
@@ -405,10 +405,11 @@ def  adminhome(request):
     name= request.user.username
     listofproduct=Accounts.objects.all().order_by('id')
     paginator=Paginator(listofproduct,16)
-    page=request.GET.get('page')
-    pagedproduct=paginator.get_page(page)
+    page=request.GET.get('page')                        
+    pagedproduct=paginator.get_page(page)   
     context={'name':name,'listofproducts':pagedproduct}
     #context={'name':name,'key1':key1}
+    return redirect('dashboard')
     return render(request,'admindashboard.html',context)
 
 @login_required(login_url='login')

@@ -153,7 +153,8 @@ $(document).ready(function() {
 
 		<div id="card" class="card card-product-grid">
 		{% for i in alloffers%}
-		{%if i.product == eachproduct%}
+		{%if i.product == product or i.category == product.category_name or i.subcategory == product.subcategory_name %}
+
 		<a href="" style="
 		 position:absolute;
 		 z-index:10;

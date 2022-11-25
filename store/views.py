@@ -412,15 +412,15 @@ def placedorder(request):
 def deleteoffer(request):
     offerid=request.POST['offerid']
     print("pfferid ",offerid)
-    offer=Offers.objects.get(id=offerid)
+    offer=RealOffers.objects.get(id=offerid)
     offer.delete()
-    print("deleted")
     return JsonResponse({'status':True})
 
 def deletecoupon(request):
+    
     offerid=request.POST['offerid']
     print("pfferid ",offerid)
-    offer=RealOffers.objects.get(id=offerid)
+    offer=Offers.objects.get(id=offerid)
     offer.delete()
     print("deleted")
     return JsonResponse({'status':True})
@@ -890,17 +890,18 @@ def addthisoffer(request):        ##For Real Offer##
     price=request.POST.get('price')
     item=request.POST.get('item')
     item2=request.POST.get('item2')
+    print(item2)
     newoffer=RealOffers()
     if item == "category":
-        catoffer=Category.objects.get(category_name=item2)
+        catoffer=Category.objects.get(slug=item2)
         newoffer.category=catoffer
 
     elif item == "subcategory":
-        subcat=Subcategory.objects.get(subcategory_name=item2)
+        subcat=Subcategory.objects.get(slug=item2)
         newoffer.subcategory=subcat
         
     else:
-        product=Products.objects.get(product_name=item2)
+        product=Products.objects.get(slug=item2)
         newoffer.product=product
     
     newoffer.offername=offername

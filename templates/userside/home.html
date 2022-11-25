@@ -128,7 +128,7 @@
 		<a href="{{product.geturl}}">
 		<figure class="card card-product-grid">
 			{% for i in inoffer%}
-			{%if i.product == product%}
+			{%if i.product == product or i.category == product.category_name or i.subcategory == product.subcategory_name %}
 			<a href="" style="
 			position:absolute;
 			z-index:10;
