@@ -22,6 +22,7 @@ urlpatterns = [
     path('adminloggedin',views.adminloggedin,name="adminloggedin"),
     path("createadminuser",views.createadminuser,name="createadminuser"),
     path('addadminuser',views.addadminuser,name="addadminuser"),
+    path('adminhome1',views.adminhome1,name="adminhome1"),
     path('adminhome',views.adminhome,name="adminhome"),    
     path('orderdetails',views.orderdetails,name="orderdetails"),
     

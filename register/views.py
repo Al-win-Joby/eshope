@@ -86,7 +86,7 @@ def signed_up(request):
 
 
     account_sid ='AC0c82fc0f46279be5c92de65a35a2a481'
-    auth_token = 'b3c1224273373418222c46e10f6ae789'
+    auth_token = ''
     client = Client(account_sid, auth_token)
 
     message = client.messages.create(
@@ -121,7 +121,7 @@ def verifynumber(request):
             otp=random.choice(list)
 
             account_sid ='AC0c82fc0f46279be5c92de65a35a2a481'  
-            auth_token = 'b3c1224273373418222c46e10f6ae789'
+            auth_token = ''
             client = Client(account_sid, auth_token)
 
             message = client.messages.create(
@@ -256,7 +256,7 @@ def getotp():
     
 
     account_sid ='AC0c82fc0f46279be5c92de65a35a2a481'
-    auth_token = 'b3c1224273373418222c46e10f6ae789'
+    auth_token = ''
     client = Client(account_sid, auth_token)
 
     message = client.messages.create(
@@ -396,6 +396,9 @@ def adminloggedin(request):
 def logout1(request):
     logout(request)
     return redirect("landingpage")
+
+def adminhome1(request):
+    return render(request,'adminhome.html')
 
 @login_required(login_url='login')
 def  adminhome(request):
