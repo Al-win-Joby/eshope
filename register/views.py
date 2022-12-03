@@ -398,7 +398,13 @@ def logout1(request):
     return redirect("landingpage")
 
 def adminhome1(request):
-    return render(request,'adminhome.html')
+    name= request.user.username
+    listofproduct=Accounts.objects.all().order_by('id')
+    paginator=Paginator(listofproduct,16)
+    page=request.GET.get('page')                        
+    pagedproduct=paginator.get_page(page)   
+    context={'name':name,'listofproducts':pagedproduct}
+    return render(request,'adminhome.html',context)
 
 @login_required(login_url='login')
 def  adminhome(request):
